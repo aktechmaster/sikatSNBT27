@@ -836,18 +836,43 @@
     function handleLogin(e) {
     e.preventDefault();
     
+    // Ambil semua nilai dari formulir
     const n = document.getElementById('fullname').value.toUpperCase();
     const id = document.getElementById('participantId').value;
     const sch = document.getElementById('school').value.toUpperCase();
     const tgl = document.getElementById('dob').value; 
 
     // --- AMBIL DATA KAMPUS PILIHAN ---
-    const u1 = document.getElementById('univ-1').value.toUpperCase();
-    const j1 = document.getElementById('jurusan-1').value;
-    const u2 = document.getElementById('univ-2').value.toUpperCase();
-    const j2 = document.getElementById('jurusan-2').value;
-    
-    // Simpan ke variabel global 'userData'
+    const u1 = document.getElementById('univ-1').value.toUpperCase().trim();
+    const j1 = document.getElementById('jurusan-1').value.trim();
+    const u2 = document.getElementById('univ-2').value.toUpperCase().trim();
+    const j2 = document.getElementById('jurusan-2').value.trim();
+
+    // ======================================================
+    // ✅ BAGIAN PENGECEKAN WAJIB ISI JURUSAN (TAMBAHAN BARU)
+    // ======================================================
+    let pesanError = "";
+
+    // Cek Pilihan 1
+    if (u1 === "" || j1 === "") {
+        pesanError += "❌ Pilihan Universitas 1 dan Jurusan 1 WAJIB diisi lengkap!\n";
+    }
+
+    // Cek Pilihan 2
+    if (u2 === "" || j2 === "") {
+        pesanError += "❌ Pilihan Universitas 2 dan Jurusan 2 WAJIB diisi lengkap!\n";
+    }
+
+    // Jika ada yang kosong, munculkan peringatan & BERHENTI DI SINI
+    if (pesanError !== "") {
+        alert("PERINGATAN PENGISIAN DATA:\n\n" + pesanError + "\nSilakan lengkapi data pilihan kampus Anda.");
+        return; // <-- SANGAT PENTING: Menghentikan proses, TIDAK LANJUT ke ujian
+    }
+    // ======================================================
+    // ✅ SELESAI BAGIAN PENGECEKAN
+    // ======================================================
+
+    // Simpan ke variabel global 'userData' (HANYA JALAN JIKA LULUS PENGECEKAN DI ATAS)
     userData = { 
         name: n, 
         id: id, 
@@ -859,7 +884,7 @@
         jurusan2: j2
     };
 
-    // Transisi ke Lobby
+    // Transisi ke Lobby (Hanya jalan jika semua data lengkap)
     document.getElementById('loginCard').style.opacity = '0';
     setTimeout(() => {
         document.getElementById('loginCard').style.display = 'none';
