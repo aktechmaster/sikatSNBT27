@@ -1458,6 +1458,68 @@ function processFinalFinish() {
         }
     });
 
+        // =======================================================
+// LIVE FETCH DATABASE PTN FROM GOOGLE SHEETS
+// =======================================================
+document.addEventListener("DOMContentLoaded", function() {
+    // GANTI dengan URL Web App Google Apps Script Anda yang sama
+    const SCRIPT_URL_GET = "https://script.google.com/macros/s/AKfycbxW2OF4yoLFo5gVYjdha39mk3MIsUFwC6dAtfq1Bp_pdzeC9DNqyeS8rAnoePPnJrk8/exec"; 
+    
+    let databasePTN = [];
+
+    const listUniv1 = document.getElementById('list-univ-1');
+    const listUniv2 = document.getElementById('list-univ-2');
+    const inputUniv1 = document.getElementById('univ-1');
+    const inputUniv2 = document.getElementById('univ-2');
+    const selectJurusan1 = document.getElementById('jurusan-1');
+    const selectJurusan2 = document.getElementById('jurusan-2');
+
+    // Ambil data secara otomatis dari Google Sheets
+    fetch(SCRIPT_URL_GET)
+        .then(response => response.json())
+        .then(data => {
+            databasePTN = data;
+            
+            // Ekstrak nama Universitas unik
+            const daftarUnivUnik = [...new Set(databasePTN.map(item => item.u))].sort();
+            
+            // Masukkan ke datalist pilihan 1 & 2
+            daftarUnivUnik.forEach(univ => {
+                listUniv1.appendChild(new Option(univ, univ));
+                listUniv2.appendChild(new Option(univ, univ));
+            });
+            
+            console.log("Sistem: 4000+ data PTN berhasil dimuat!");
+        })
+        .catch(err => console.error("Gagal memuat database PTN:", err));
+
+    // Logika filter Pilihan 1
+    inputUniv1.addEventListener('change', function() {
+        const prodiTersedia = databasePTN.filter(item => item.u === this.value);
+        if (prodiTersedia.length > 0) {
+            selectJurusan1.disabled = false;
+            selectJurusan1.innerHTML = '<option value="">-- Pilih Jurusan 1 --</option>';
+            prodiTersedia.forEach(item => selectJurusan1.appendChild(new Option(item.p, item.p)));
+        } else {
+            selectJurusan1.disabled = true;
+            selectJurusan1.innerHTML = '<option value="">-- Pilih Universitas 1 Terlebih Dahulu --</option>';
+        }
+    });
+
+    // Logika filter Pilihan 2
+    inputUniv2.addEventListener('change', function() {
+        const prodiTersedia = databasePTN.filter(item => item.u === this.value);
+        if (prodiTersedia.length > 0) {
+            selectJurusan2.disabled = false;
+            selectJurusan2.innerHTML = '<option value="">-- Pilih Jurusan 2 --</option>';
+            prodiTersedia.forEach(item => selectJurusan2.appendChild(new Option(item.p, item.p)));
+        } else {
+            selectJurusan2.disabled = true;
+            selectJurusan2.innerHTML = '<option value="">-- Pilih Universitas 2 Terlebih Dahulu --</option>';
+        }
+    });
+});
+
     </script>
 
     <div id="certificateModal">
