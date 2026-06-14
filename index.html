@@ -1493,9 +1493,20 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch(err => console.error("Gagal memuat database PTN:", err));
 
+    // =======================================================
+    // FIX ENGINE AUTO-FILTER (ANTI-CASE SENSITIVE & SPASI)
+    // =======================================================
+
     // Logika filter Pilihan 1
     inputUniv1.addEventListener('change', function() {
-        const prodiTersedia = databasePTN.filter(item => item.u === this.value);
+        // Ambil input siswa, ubah ke huruf besar semua, dan hapus spasi berlebih di awal/akhir
+        const kataKunci = this.value.toUpperCase().trim(); 
+        
+        // Filter database dengan menyamakan semua menjadi huruf besar
+        const prodiTersedia = databasePTN.filter(item => {
+            return item.u.toUpperCase().trim() === kataKunci;
+        });
+
         if (prodiTersedia.length > 0) {
             selectJurusan1.disabled = false;
             selectJurusan1.innerHTML = '<option value="">-- Pilih Jurusan 1 --</option>';
@@ -1508,7 +1519,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Logika filter Pilihan 2
     inputUniv2.addEventListener('change', function() {
-        const prodiTersedia = databasePTN.filter(item => item.u === this.value);
+        const kataKunci = this.value.toUpperCase().trim();
+        
+        const prodiTersedia = databasePTN.filter(item => {
+            return item.u.toUpperCase().trim() === kataKunci;
+        });
+
         if (prodiTersedia.length > 0) {
             selectJurusan2.disabled = false;
             selectJurusan2.innerHTML = '<option value="">-- Pilih Jurusan 2 --</option>';
@@ -1518,7 +1534,6 @@ document.addEventListener("DOMContentLoaded", function() {
             selectJurusan2.innerHTML = '<option value="">-- Pilih Universitas 2 Terlebih Dahulu --</option>';
         }
     });
-});
 
     </script>
 
