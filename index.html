@@ -1474,11 +1474,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const selectJurusan2 = document.getElementById('jurusan-2');
 
     // 2. Menggunakan mode 'cors' dan mengizinkan redirect otomatis dari server Google
-    fetch(SCRIPT_URL_GET, {
-        method: "GET",
-        mode: "cors",
-        redirect: "follow"
-    })
+    fetch(SCRIPT_URL_GET) // Cukup panggil saja, biarkan browser yang atur
+.then(response => response.json()) // Langsung parsing JSON
+        
     .then(response => {
         if (!response.ok) throw new Error("Jaringan bermasalah atau URL salah");
         return response.json();
