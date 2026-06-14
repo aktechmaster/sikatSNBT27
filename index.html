@@ -747,7 +747,11 @@
     // State Keamanan
     let violationCount = parseInt(getData('violationCount') || 0);
     let isBlocked = getData('isBlocked') === 'true';
-    let examStarted = getData('examStarted') === 'true'; // Akan true jika ada di LS
+    
+    // 🔴 PERBAIKAN UTAMA 1: Nilai awal HARUS FALSE, TIDAK BOLEH ambil dari penyimpanan saat awal muat!
+    // Penyimpanan hanya dibaca saat pemulihan sesi saja.
+    let examStarted = false; 
+    
     let lastViolationTime = 0; 
     let isWarningModalOpen = false;
 
@@ -785,6 +789,7 @@
 
         document.cookie = "violationCount=; path=/; max-age=0";
         document.cookie = "isBlocked=; path=/; max-age=0";
+        document.cookie = "examStarted=; path=/; max-age=0";
     }
 
     // ==========================================
@@ -1046,6 +1051,118 @@ renderMathInElement(document.getElementById("examInterface"), {
             grid.appendChild(btn);
         });
     }
+
+    // ==========================================
+    // SENSOR KEAMANAN (PERBAIKAN TOTAL KHUSUS HP)
+    // ==========================================
+    
+    function processViolation() {
+    // 🔒 PENGAMAN MUTLAK: JANGAN LAKUKAN APA-APA JIKA UJIAN BELUM MULAI / SUDAH SELESAI / DIBLOKIR / ADA PESAN
+    if (!examStarted || isBlocked || isExamFinished || isWarningModalOpen) {
+        return; 
+    }
+
+        // 2. CEK JEDA WAKTU (SOLUSI DOUBLE HITUNG)
+        const now = Date.now();
+        if (now - lastViolationTime < 2000) {
+            return; 
+        }
+        lastViolationTime = now;
+
+        // 3. Tambah Pelanggaran
+        violationCount++;
+        setData('violationCount', violationCount);
+
+        // 4. Update Tampilan Angka
+        if (countDisplay) countDisplay.innerText = violationCount;
+        if (modalViolationCountSpan) modalViolationCountSpan.innerText = violationCount;
+        if (modalRemainingCountSpan) modalRemainingCountSpan.innerText = (MAX_PELANGGARAN - violationCount);
+
+        // 5. Cek Hukuman
+        if (violationCount >= MAX_PELANGGARAN) {
+            if (typeof blockExam === 'function') blockExam();
+        } else {
+            if (customWarningModal) {
+                customWarningModal.style.display = 'flex';
+                isWarningModalOpen = true;
+            }
+        }
+    }
+
+    // ==========================================
+    // FUNGSI BLOKIR
+    // ==========================================
+    function blockExam() {
+        console.log("BLOKIR DIEKSEKUSI!");
+        
+        // 1. Set Status Terblokir
+        isBlocked = true;
+        try { setData('isBlocked', 'true'); } catch (e) { localStorage.setItem('isBlocked', 'true'); }
+
+        // 2. Munculkan Layar Merah
+        const screen = document.getElementById('blockScreen');
+        if (screen) {
+            screen.style.display = 'flex'; 
+        } else {
+            alert("ANDA DIBLOKIR KARENA PELANGGARAN!");
+            document.body.innerHTML = "<h1 style='color:red; text-align:center; padding-top:100px;'>AKSES UJIAN DIBLOKIR</h1>";
+        }
+        
+        // 3. Matikan Timer
+        if (window.timerInterval) clearInterval(window.timerInterval);
+    }
+
+    // ==========================================
+    // PASANG SENSOR (DIPERKUAT KHUSUS HP)
+    // ==========================================
+    window.addEventListener('blur', function() {
+        // ✅ HANYA JALAN JIKA UJIAN SUDAH DIMULAI
+        if (examStarted && !isBlocked && !isWarningModalOpen) {
+            processViolation();
+        }
+    });
+
+    document.addEventListener('visibilitychange', function() {
+        // ✅ ATURAN PALING KETAT UNTUK HP:
+        // Hanya hitung jika: 
+        // 1. Halaman disembunyikan (pindah aplikasi/minimize)
+        // 2. Ujian SUDAH dimulai
+        // 3. TIDAK sedang diblokir
+        // 4. TIDAK sedang ada pesan peringatan muncul
+        if (document.hidden && examStarted && !isBlocked && !isWarningModalOpen) {
+            processViolation();
+        }
+    });
+
+    // KEYBOARD SHORTCUTS
+    document.addEventListener('keydown', function(e) {
+        // Reset: Ctrl + Shift + 9
+        if (e.ctrlKey && e.shiftKey && e.keyCode === 57) {
+            e.preventDefault();
+            setTimeout(() => {
+                let pass = prompt("PASSWORD RESET:");
+                if (pass === PASSWORD_RESET) {
+                    clearData();
+                    alert("Sistem Reset. Reloading...");
+                    location.reload(); 
+                } else if(pass) {
+                    alert("Password Salah!");
+                }
+            }, 100);
+            return false;
+        }
+        // Block Inspect
+        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67 || e.keyCode == 85))) {
+            e.preventDefault(); return false;
+        }
+    });
+
+    // ==========================================
+    // BAGIAN SELANJUTNYA (TIMER, SOAL, DLL) TETAP SAMA
+    // ==========================================
+    // ... (Kode timer, updateView, dan fungsi lainnya tetap seperti aslimu) ...
+
+</script>
 
     function nextQuestion() {
         const activeQuestions = examData[currentSubtest].questions;
