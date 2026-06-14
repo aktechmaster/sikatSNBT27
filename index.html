@@ -557,6 +557,35 @@
                 <div class="form-group"><label>Asal Sekolah</label><input type="text" class="form-control" id="school" required oninput="this.value = this.value.toUpperCase()"
         style="text-transform: uppercase"></div>
                 <div class="form-group"><label>Tanggal Lahir</label><input type="date" class="form-control" id="dob" required></div>
+
+
+            <div class="form-group" style="margin-top: 12px;">
+  <label><b>Pilihan Universitas 1</b></label>
+  <input list="list-univ-1" id="univ-1" class="form-control" placeholder="Ketik & pilih kampus 1...">
+  <datalist id="list-univ-1"></datalist>
+</div>
+
+<div class="form-group" style="margin-top: 8px;">
+  <label>Pilihan Jurusan 1</label>
+  <select id="jurusan-1" class="form-control" disabled>
+    <option value="">-- Pilih Universitas 1 Terlebih Dahulu --</option>
+  </select>
+</div>
+
+<hr style="border-top: 1px dashed #ccc; margin: 15px 0;">
+
+<div class="form-group">
+  <label><b>Pilihan Universitas 2</b></label>
+  <input list="list-univ-2" id="univ-2" class="form-control" placeholder="Ketik & pilih kampus 2...">
+  <datalist id="list-univ-2"></datalist>
+</div>
+
+<div class="form-group" style="margin-top: 8px;">
+  <label>Pilihan Jurusan 2</label>
+  <select id="jurusan-2" class="form-control" disabled>
+    <option value="">-- Pilih Universitas 2 Terlebih Dahulu --</option>
+  </select>
+</div>
                 
                 <div class="form-group" style="display:flex; gap:10px; margin-top:20px;">
                     <input type="checkbox" id="consent" required style="margin-top:4px;">
@@ -806,26 +835,30 @@
     function handleLogin(e) {
     e.preventDefault();
     
-    // 1. Ambil data dari Input
     const n = document.getElementById('fullname').value.toUpperCase();
     const id = document.getElementById('participantId').value;
     const sch = document.getElementById('school').value.toUpperCase();
-    
-    // --- BAGIAN BARU (PENTING) ---
-    // Mengambil nilai tanggal lahir dari input HTML id="dob"
     const tgl = document.getElementById('dob').value; 
-    // -----------------------------
 
-    // 2. Simpan ke variabel global 'userData'
-    // Tambahkan properti 'birthDate' agar bisa dipanggil nanti
+    // --- AMBIL DATA KAMPUS PILIHAN ---
+    const u1 = document.getElementById('univ-1').value.toUpperCase();
+    const j1 = document.getElementById('jurusan-1').value;
+    const u2 = document.getElementById('univ-2').value.toUpperCase();
+    const j2 = document.getElementById('jurusan-2').value;
+    
+    // Simpan ke variabel global 'userData'
     userData = { 
         name: n, 
         id: id, 
         school: sch, 
-        birthDate: tgl  // <--- Data disimpan di sini
+        birthDate: tgl,
+        univ1: u1,
+        jurusan1: j1,
+        univ2: u2,
+        jurusan2: j2
     };
 
-    // 3. Transisi ke Lobby (Kode asli Anda)
+    // Transisi ke Lobby
     document.getElementById('loginCard').style.opacity = '0';
     setTimeout(() => {
         document.getElementById('loginCard').style.display = 'none';
@@ -835,6 +868,7 @@
         document.getElementById('userDisplayLobby').innerHTML = `
             <span class="user-name-big">${n}</span>
             <span class="user-meta">NO: ${id} | ${sch}</span>
+            <br><small style="color:#ddd;">Pil 1: ${j1} (${u1}) | Pil 2: ${j2} (${u2})</small>
         `;
         setTimeout(() => sop.style.opacity = '1', 50);
     }, 500);
@@ -1119,6 +1153,12 @@ function processFinalFinish() {
         nomor: userData.id || "-",
         sekolah: userData.school || "-",
         tgl_lahir: userData.birthDate || "-",
+        // --- DATA KAMPUS BARU YANG AKAN MASUK KE GS ---
+    pilihan_univ_1: userData.univ1 || "-",
+    pilihan_jurusan_1: userData.jurusan1 || "-",
+    pilihan_univ_2: userData.univ2 || "-",
+    pilihan_jurusan_2: userData.jurusan2 || "-",
+    // ----------------------------------------------
         pelanggaran: violationCount || 0,
 
         // Ambil data dari hasil hitungan di atas (pakai ?. agar tidak error jika mapel tidak ada)
