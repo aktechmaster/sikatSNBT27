@@ -1458,98 +1458,88 @@ function processFinalFinish() {
     });
 
         // =======================================================
-// SINKRONISASI DATA PTN - FIX CORS ENGINE
+// PERBAIKAN MUTLAK: SINKRONISASI DATA PTN
 // =======================================================
-document.addEventListener("DOMContentLoaded", function() {
-    // 1. PASTIKAN URL INI ADALAH URL LIVE DEPLOYMENT GS TERBARU ANDA
-    const SCRIPT_URL_GET = "https://script.google.com/macros/s/AKfycbxW2OF4yoLFo5gVYjdha39mk3MIsUFwC6dAtfq1Bp_pdzeC9DNqyeS8rAnoePPnJrk8/exec"; 
 
-    let databasePTN = [];
+// 1. PASTIKAN URL INI ADALAH URL TERBARU HASIL DEPLOY!
+const SCRIPT_URL_GET = "https://script.google.com/macros/s/AKfycbxW2OF4yoLFo5gVYjdha39mk3MIsUFwC6dAtfq1Bp_pdzeC9DNqyeS8rAnoePPnJrk8/exec";
 
-    const listUniv1 = document.getElementById('list-univ-1');
-    const listUniv2 = document.getElementById('list-univ-2');
-    const inputUniv1 = document.getElementById('univ-1');
-    const inputUniv2 = document.getElementById('univ-2');
-    const selectJurusan1 = document.getElementById('jurusan-1');
-    const selectJurusan2 = document.getElementById('jurusan-2');
+let databasePTN = [];
 
-    // 2. Menggunakan mode 'cors' dan mengizinkan redirect otomatis dari server Google
-    fetch(SCRIPT_URL_GET) // Cukup panggil saja, biarkan browser yang atur
-.then(response => response.json()) // Langsung parsing JSON
-        
-    .then(response => {
-        if (!response.ok) throw new Error("Jaringan bermasalah atau URL salah");
-        return response.json();
-    })
+// Ambil elemen HTML
+const listUniv1 = document.getElementById('list-univ-1');
+const listUniv2 = document.getElementById('list-univ-2');
+const inputUniv1 = document.getElementById('univ-1');
+const inputUniv2 = document.getElementById('univ-2');
+const selectJurusan1 = document.getElementById('jurusan-1');
+const selectJurusan2 = document.getElementById('jurusan-2');
+
+// JALANKAN LANGSUNG TANPA TUNGGU DOM LOADED
+ambilDataDariGS();
+
+function ambilDataDariGS() {
+    console.log("Mengambil data...");
+
+    fetch(SCRIPT_URL_GET)
+    .then(res => res.json())
     .then(data => {
         if (data.error) {
-            console.error("Error dari Google Sheets:", data.error);
+            alert("ERROR GS: " + data.error); // <-- INI PENTING! Kalau ada salah nama sheet, akan muncul pesan ini.
             return;
         }
-        
-        databasePTN = data;
-        
-        // Ambil list universitas unik (Anti-Duplikat), bersihkan spasi, dan urutkan A-Z
-        const daftarUnivUnik = [...new Set(databasePTN.map(item => item.u.toUpperCase().trim()))].sort();
-        
-        // Bersihkan datalist lama sebelum diisi baru
-        listUniv1.innerHTML = "";
-        listUniv2.innerHTML = "";
 
-        // Masukkan data ke datalist pendukung input otomatis (Autocomplete)
-        daftarUnivUnik.forEach(univ => {
-            listUniv1.appendChild(new Option(univ, univ));
-            listUniv2.appendChild(new Option(univ, univ));
+        databasePTN = data;
+        console.log("Data berhasil dimuat: ", databasePTN.length, " data");
+
+        // Ambil daftar nama universitas unik
+        const daftarUniv = [...new Set(databasePTN.map(item => item.u))].sort();
+
+        // Masukkan ke kotak input
+        daftarUniv.forEach(namaUniv => {
+            listUniv1.appendChild(new Option(namaUniv, namaUniv));
+            listUniv2.appendChild(new Option(namaUniv, namaUniv));
         });
-        
-        console.log("Sistem: Berhasil memuat " + databasePTN.length + " data PTN secara live!");
     })
     .catch(err => {
-        console.error("Sistem Gagal Memuat Database:", err);
+        alert("Gagal terhubung ke Server: " + err); // <-- Kalau URL salah / internet mati, muncul ini.
     });
+}
 
-    // =======================================================
-    // LOGIKA FILTER OTOMATIS PILIHAN 1 (MENGGUNAKAN EVENT 'INPUT')
-    // =======================================================
-    inputUniv1.addEventListener('input', function() {
-        const kataKunci = this.value.toUpperCase().trim();
-        // Pencarian fleksibel agar aman dari sisa spasi manual
-        const prodiTersedia = databasePTN.filter(item => item.u.toUpperCase().trim() === kataKunci);
+// Filter Jurusan 1
+inputUniv1.addEventListener('input', function() {
+    const cari = this.value.toUpperCase().trim();
+    const hasil = databasePTN.filter(x => x.u === cari);
 
-        selectJurusan1.innerHTML = ''; // Reset pilihan
+    selectJurusan1.innerHTML = '';
+    if (hasil.length > 0) {
+        selectJurusan1.disabled = false;
+        selectJurusan1.appendChild(new Option("-- Pilih Jurusan --", ""));
+        hasil.forEach(prodi => {
+            selectJurusan1.appendChild(new Option(prodi.p, prodi.p));
+        });
+    } else {
+        selectJurusan1.disabled = true;
+        selectJurusan1.appendChild(new Option("-- Universitas Tidak Ditemukan --", ""));
+    }
+});
 
-        if (prodiTersedia.length > 0) {
-            selectJurusan1.disabled = false;
-            selectJurusan1.appendChild(new Option("-- Pilih Jurusan 1 --", ""));
-            prodiTersedia.forEach(item => {
-                selectJurusan1.appendChild(new Option(item.p, item.p));
-            });
-        } else {
-            selectJurusan1.disabled = true;
-            selectJurusan1.appendChild(new Option("-- Pilih Universitas 1 Terlebih Dahulu --", ""));
-        }
-    });
+// Filter Jurusan 2
+inputUniv2.addEventListener('input', function() {
+    const cari = this.value.toUpperCase().trim();
+    const hasil = databasePTN.filter(x => x.u === cari);
 
-    // =======================================================
-    // LOGIKA FILTER OTOMATIS PILIHAN 2 (MENGGUNAKAN EVENT 'INPUT')
-    // =======================================================
-    inputUniv2.addEventListener('input', function() {
-        const kataKunci = this.value.toUpperCase().trim();
-        const prodiTersedia = databasePTN.filter(item => item.u.toUpperCase().trim() === kataKunci);
-
-        selectJurusan2.innerHTML = ''; // Reset pilihan
-
-        if (prodiTersedia.length > 0) {
-            selectJurusan2.disabled = false;
-            selectJurusan2.appendChild(new Option("-- Pilih Jurusan 2 --", ""));
-            prodiTersedia.forEach(item => {
-                selectJurusan2.appendChild(new Option(item.p, item.p));
-            });
-        } else {
-            selectJurusan2.disabled = true;
-            selectJurusan2.appendChild(new Option("-- Pilih Universitas 2 Terlebih Dahulu --", ""));
-        }
-    });
+    selectJurusan2.innerHTML = '';
+    if (hasil.length > 0) {
+        selectJurusan2.disabled = false;
+        selectJurusan2.appendChild(new Option("-- Pilih Jurusan --", ""));
+        hasil.forEach(prodi => {
+            selectJurusan2.appendChild(new Option(prodi.p, prodi.p));
+        });
+    } else {
+        selectJurusan2.disabled = true;
+        selectJurusan2.appendChild(new Option("-- Universitas Tidak Ditemukan --", ""));
+    }
+});
     
     </script>
 
