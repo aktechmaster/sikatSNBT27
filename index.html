@@ -849,30 +849,55 @@
     const j2 = document.getElementById('jurusan-2').value.trim();
 
     // ======================================================
-    // ✅ BAGIAN PENGECEKAN WAJIB ISI JURUSAN (TAMBAHAN BARU)
+    // ✅ BAGIAN PENGECEKAN & PESAN ERROR TANPA ALERT
     // ======================================================
-    let pesanError = "";
+    
+    // Cari elemen pesan error (kita buat dinamis)
+    let errorBox = document.getElementById('errorNotification');
+    // Jika belum ada, buat kotak pesannya di bawah tombol
+    if (!errorBox) {
+        errorBox = document.createElement('div');
+        errorBox.id = 'errorNotification';
+        errorBox.style.color = '#dc3545'; // Warna Merah
+        errorBox.style.fontWeight = 'bold';
+        errorBox.style.textAlign = 'center';
+        errorBox.style.padding = '10px';
+        errorBox.style.marginTop = '15px';
+        errorBox.style.border = '1px solid #dc3545';
+        errorBox.style.borderRadius = '5px';
+        errorBox.style.backgroundColor = '#f8d7da';
+        // Tempelkan di paling bawah form
+        document.querySelector('.form-group:last-child').after(errorBox);
+    }
+
+    let pesanKesalahan = "";
 
     // Cek Pilihan 1
     if (u1 === "" || j1 === "") {
-        pesanError += "❌ Pilihan Universitas 1 dan Jurusan 1 WAJIB diisi lengkap!\n";
+        pesanKesalahan += "❌ Pilihan Universitas & Jurusan 1 WAJIB diisi lengkap!<br>";
     }
 
     // Cek Pilihan 2
     if (u2 === "" || j2 === "") {
-        pesanError += "❌ Pilihan Universitas 2 dan Jurusan 2 WAJIB diisi lengkap!\n";
+        pesanKesalahan += "❌ Pilihan Universitas & Jurusan 2 WAJIB diisi lengkap!<br>";
     }
 
-    // Jika ada yang kosong, munculkan peringatan & BERHENTI DI SINI
-    if (pesanError !== "") {
-        alert("PERINGATAN PENGISIAN DATA:\n\n" + pesanError + "\nSilakan lengkapi data pilihan kampus Anda.");
-        return; // <-- SANGAT PENTING: Menghentikan proses, TIDAK LANJUT ke ujian
+    // Jika ada yang kosong
+    if (pesanKesalahan !== "") {
+        // Tampilkan pesan di halaman, TIDAK PAKAI ALERT
+        errorBox.innerHTML = pesanKesalahan + "<small style='color:#990000;'>Lengkapi data sebelum lanjut.</small>";
+        // Gulirkan layar ke atas agar terlihat pesannya
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        return; // STOP, tidak lanjut
+    } else {
+        // Jika benar semua, hilangkan pesan error
+        errorBox.remove();
     }
     // ======================================================
-    // ✅ SELESAI BAGIAN PENGECEKAN
+    // ✅ SELESAI: TIDAK ADA POPUP, AMAN DARI PELANGGARAN
     // ======================================================
 
-    // Simpan ke variabel global 'userData' (HANYA JALAN JIKA LULUS PENGECEKAN DI ATAS)
+    // Simpan ke variabel global 'userData'
     userData = { 
         name: n, 
         id: id, 
@@ -899,18 +924,6 @@
         setTimeout(() => sop.style.opacity = '1', 50);
     }, 500);
 }
-
-    function backToLogin() {
-        const sop = document.getElementById('sopOverlay');
-        sop.style.opacity = '0';
-        setTimeout(() => {
-            sop.style.display = 'none';
-            const log = document.getElementById('loginCard');
-            log.style.display = 'flex';
-            setTimeout(() => log.style.opacity = '1', 50);
-        }, 500);
-    }
-
     // ==========================================
     // 2. MULAI UJIAN (START)
     // ==========================================
@@ -1328,8 +1341,9 @@ function processFinalFinish() {
     // ==========================================
     
     function processViolation() {
-        // 1. Cek Dasar: Kalau ujian belum mulai atau sudah diblokir, abaikan.
-        if (!examStarted || isBlocked || isExamFinished) return;
+    // 🔒 PERUBAHAN: Tambahkan kondisi '!examStarted' di paling depan
+    // Artinya: JANGAN HITUNG PELANGGARAN SELAMA BELUM MULAI UJIAN
+    if (!examStarted || isBlocked || isExamFinished || isWarningModalOpen) return;
 
         // 2. CEK JEDA WAKTU (SOLUSI MASALAH KAMU)
         // Jika pelanggaran terakhir kurang dari 2 detik yang lalu, abaikan sinyal ini.
@@ -1388,7 +1402,7 @@ function processFinalFinish() {
     // Pasang Sensor Baru
     window.addEventListener('blur', processViolation);
     document.addEventListener('visibilitychange', () => {
-        if (document.hidden) processViolation();
+        if (document.hidden && examStarted) processViolation();
     });
 
     // KEYBOARD SHORTCUTS
