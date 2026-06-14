@@ -1359,7 +1359,6 @@ function processFinalFinish() {
         // 3. Matikan Timer
         if (window.timerInterval) clearInterval(window.timerInterval);
     }
-    }
 
     // Pasang Sensor Baru
     window.addEventListener('blur', processViolation);
@@ -1511,9 +1510,12 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error("Sistem Gagal Memuat Database:", err);
     });
 
-    // 3. Logika Filter Otomatis Pilihan 1 (Anti Huruf Kecil & Spasi)
-    inputUniv1.addEventListener('change', function() {
+    // =======================================================
+    // LOGIKA FILTER OTOMATIS PILIHAN 1 (MENGGUNAKAN EVENT 'INPUT')
+    // =======================================================
+    inputUniv1.addEventListener('input', function() {
         const kataKunci = this.value.toUpperCase().trim();
+        // Pencarian fleksibel agar aman dari sisa spasi manual
         const prodiTersedia = databasePTN.filter(item => item.u.toUpperCase().trim() === kataKunci);
 
         selectJurusan1.innerHTML = ''; // Reset pilihan
@@ -1530,8 +1532,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // 4. Logika Filter Otomatis Pilihan 2 (Anti Huruf Kecil & Spasi)
-    inputUniv2.addEventListener('change', function() {
+    // =======================================================
+    // LOGIKA FILTER OTOMATIS PILIHAN 2 (MENGGUNAKAN EVENT 'INPUT')
+    // =======================================================
+    inputUniv2.addEventListener('input', function() {
         const kataKunci = this.value.toUpperCase().trim();
         const prodiTersedia = databasePTN.filter(item => item.u.toUpperCase().trim() === kataKunci);
 
@@ -1548,7 +1552,7 @@ document.addEventListener("DOMContentLoaded", function() {
             selectJurusan2.appendChild(new Option("-- Pilih Universitas 2 Terlebih Dahulu --", ""));
         }
     });
-});
+    
     </script>
 
     <div id="certificateModal">
