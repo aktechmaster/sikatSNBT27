@@ -1459,10 +1459,10 @@ function processFinalFinish() {
     });
 
         // =======================================================
-// LIVE FETCH DATABASE PTN FROM GOOGLE SHEETS
+// LIVE FETCH DATABASE PTN & ANTI-CASE SENSITIVE ENGINE
 // =======================================================
 document.addEventListener("DOMContentLoaded", function() {
-    // GANTI dengan URL Web App Google Apps Script Anda yang sama
+    // URL Web App Google Apps Script Anda (Ganti dengan URL deployment GS baru Anda)
     const SCRIPT_URL_GET = "https://script.google.com/macros/s/AKfycbxW2OF4yoLFo5gVYjdha39mk3MIsUFwC6dAtfq1Bp_pdzeC9DNqyeS8rAnoePPnJrk8/exec"; 
     
     let databasePTN = [];
@@ -1474,38 +1474,29 @@ document.addEventListener("DOMContentLoaded", function() {
     const selectJurusan1 = document.getElementById('jurusan-1');
     const selectJurusan2 = document.getElementById('jurusan-2');
 
-    // Ambil data secara otomatis dari Google Sheets
+    // 1. Ambil data otomatis dari Google Sheets (Tab Daftar_Jurusan)
     fetch(SCRIPT_URL_GET)
         .then(response => response.json())
         .then(data => {
             databasePTN = data;
             
-            // Ekstrak nama Universitas unik
-            const daftarUnivUnik = [...new Set(databasePTN.map(item => item.u))].sort();
+            // Ekstrak nama Universitas secara unik (Anti-Duplikat)
+            const daftarUnivUnik = [...new Set(databasePTN.map(item => item.u.toUpperCase().trim()))].sort();
             
-            // Masukkan ke datalist pilihan 1 & 2
+            // Inject nama universitas ke datalist pendukung input otomatis (Autocomplete)
             daftarUnivUnik.forEach(univ => {
                 listUniv1.appendChild(new Option(univ, univ));
                 listUniv2.appendChild(new Option(univ, univ));
             });
             
-            console.log("Sistem: 4000+ data PTN berhasil dimuat!");
+            console.log("Sistem: " + databasePTN.length + " data PTN dari Google Sheets berhasil dimuat!");
         })
         .catch(err => console.error("Gagal memuat database PTN:", err));
 
-    // =======================================================
-    // FIX ENGINE AUTO-FILTER (ANTI-CASE SENSITIVE & SPASI)
-    // =======================================================
-
-    // Logika filter Pilihan 1
+    // 2. Logika filter Pilihan 1 (Anti Huruf Kecil/Besar & Spasi Liar)
     inputUniv1.addEventListener('change', function() {
-        // Ambil input siswa, ubah ke huruf besar semua, dan hapus spasi berlebih di awal/akhir
         const kataKunci = this.value.toUpperCase().trim(); 
-        
-        // Filter database dengan menyamakan semua menjadi huruf besar
-        const prodiTersedia = databasePTN.filter(item => {
-            return item.u.toUpperCase().trim() === kataKunci;
-        });
+        const prodiTersedia = databasePTN.filter(item => item.u.toUpperCase().trim() === kataKunci);
 
         if (prodiTersedia.length > 0) {
             selectJurusan1.disabled = false;
@@ -1517,13 +1508,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Logika filter Pilihan 2
+    // 3. Logika filter Pilihan 2
     inputUniv2.addEventListener('change', function() {
         const kataKunci = this.value.toUpperCase().trim();
-        
-        const prodiTersedia = databasePTN.filter(item => {
-            return item.u.toUpperCase().trim() === kataKunci;
-        });
+        const prodiTersedia = databasePTN.filter(item => item.u.toUpperCase().trim() === kataKunci);
 
         if (prodiTersedia.length > 0) {
             selectJurusan2.disabled = false;
@@ -1534,7 +1522,7 @@ document.addEventListener("DOMContentLoaded", function() {
             selectJurusan2.innerHTML = '<option value="">-- Pilih Universitas 2 Terlebih Dahulu --</option>';
         }
     });
-
+});
     </script>
 
     <div id="certificateModal">
