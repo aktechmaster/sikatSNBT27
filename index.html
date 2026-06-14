@@ -1266,32 +1266,58 @@ function processFinalFinish() {
     if (typeof window.timerInterval !== 'undefined') clearInterval(window.timerInterval);
 
     // ==========================================
-    // 1. HITUNG SKOR & JUMLAH BENAR
-    // ==========================================
-    let s = {};      // Objek untuk Sertifikat (Skor saja)
-    let stats = {};  // Objek untuk Spreadsheet (Skor + Jumlah Benar)
+// 1. HITUNG SKOR & JUMLAH BENAR (DIPERBAIKI UTBK STYLE)
+// ==========================================
+let s = {};      // Objek untuk Sertifikat (Skor saja)
+let stats = {};  // Objek untuk Spreadsheet (Skor + Jumlah Benar)
 
-    for (let key in examData) {
-        let sub = examData[key];
-        let subScore = 0;
-        let correctCount = 0; // Tambahan: Hitung jumlah soal yang benar
+for (let key in examData) {
+    let sub = examData[key];
+    let subScore = 0;       // Poin yang didapat (mentah)
+    let totalPoinMaks = 0;  // Total poin jika semua dijawab benar
+    let correctCount = 0;   // Tambahan: Hitung jumlah soal yang benar
 
-        // Loop setiap soal untuk cek jawaban
-        sub.questions.forEach(q => {
-            if (q.answer === q.correctAnswer) {
-                subScore += (q.score || 0);
-                correctCount++; 
-            }
-        });
-
-        let k = key.toLowerCase(); // Contoh: "PU" jadi "pu"
+    // Loop setiap soal untuk cek jawaban & hitung poin maksimal
+    sub.questions.forEach(q => {
+        let poinSoal = q.score || 0; // Ambil bobot soal dari soal.js
         
-        // Simpan untuk Sertifikat (Kode Lama Anda)
-        s[k] = subScore.toFixed(2);
+        // Hitung total poin yang bisa didapat subtes ini
+        totalPoinMaks += poinSoal;
+
+        // Cek jawaban benar
+        if (q.answer === q.correctAnswer) {
+            subScore += poinSoal;
+            correctCount++; 
+        }
+    });
+
+    // === RUMUS KONVERSI UTBK: SKALA 200 - 1000 ===
+    let nilaiAkhir;
+    if (totalPoinMaks === 0) {
+        nilaiAkhir = 200; // Kalau tidak ada soal, langsung 200
+    } else {
+        // Rumus: Nilai = 200 + (Persentase Benar × 800)
+        let persentase = subScore / totalPoinMaks;
+        nilaiAkhir = 200 + (persentase * 800);
         
-        // Simpan untuk Spreadsheet
-        stats[k] = { score: subScore, correct: correctCount };
+        // Pembulatan ke angka bulat & batasi nilai (min 200, maks 1000)
+        nilaiAkhir = Math.round(nilaiAkhir);
+        nilaiAkhir = Math.max(200, Math.min(1000, nilaiAkhir));
     }
+
+    let k = key.toLowerCase(); // Contoh: "PU" jadi "pu"
+    
+    // Simpan untuk Sertifikat (SUDAH NILAI AKHIR KONVERSI)
+    s[k] = nilaiAkhir; // ⬅️ Ubah jadi angka bulat, hapus .toFixed(2) biar rapi
+    
+    // Simpan untuk Spreadsheet (tetap lengkap)
+    stats[k] = { 
+        score: nilaiAkhir,      // Nilai akhir skala 200-1000
+        skorMentah: subScore,   // Skor asli (jika butuh data asli)
+        poinMaks: totalPoinMaks,// Poin maksimal subtes ini
+        correct: correctCount   // Jumlah benar
+    };
+}}
 
     // ==========================================
     // 2. KIRIM KE SPREADSHEET (LATAR BELAKANG)
