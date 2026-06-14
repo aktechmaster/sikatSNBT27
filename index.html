@@ -30,15 +30,16 @@
         display: flex; 
         align-items: center; 
         justify-content: center;
-        overflow: hidden; 
-    }
+        overflow-y: auto; /* Mengizinkan scroll vertikal di laptop/desktop */
+    padding: 40px 0;  /* Memberi ruang atas bawah agar card tidak nempel ke layar */
+}
 
     @media (max-width: 768px) {
         body {
             display: block; 
             height: auto;
             overflow-y: auto; 
-            overflow-x: auto;
+            overflow-x: hidden;
             padding: 20px 0; 
         }
     }
