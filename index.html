@@ -722,6 +722,7 @@
 
     <script>
     
+        
     // Tambahkan variabel ini di deretan variabel paling atas
     let isExamFinished = false;
 
@@ -810,14 +811,18 @@
         // Cek progres
         const saved = localStorage.getItem('snbt_progress');
         if (saved) {
-            const data = JSON.parse(saved);
-            // Validasi sederhana
-            if (data.userData && data.userData.name) {
-                if (confirm("Ditemukan progres ujian sebelumnya. Ingin melanjutkan?")) {
-                    restoreSession(data);
-                } else {
-                    localStorage.removeItem('snbt_progress');
+            try {
+                const data = JSON.parse(saved);
+                // Validasi sederhana
+                if (data.userData && data.userData.name) {
+                    if (confirm("Ditemukan progres ujian sebelumnya. Ingin melanjutkan?")) {
+                        restoreSession(data);
+                    } else {
+                        localStorage.removeItem('snbt_progress');
+                    }
                 }
+            } catch(e) {
+                localStorage.removeItem('snbt_progress');
             }
         }
     };
@@ -846,18 +851,35 @@
     function handleLogin(e) {
     e.preventDefault();
     
-    // AMBIL DATA DENGAN PENGAMAN (JANGAN SAMPAI ERROR ELEMEN TIDAK KETEMU)
-    const n = document.getElementById('fullname')?.value.toUpperCase() || "";
-    const id = document.getElementById('participantId')?.value || "";
-    const sch = document.getElementById('school')?.value.toUpperCase() || "";
-    const tgl = document.getElementById('dob')?.value || ""; 
-    const email = document.getElementById('userEmail')?.value || ""; // ✅ AMAN, TIDAK ERROR KALAU KOSONG
+    // ✅ PERBAIKAN UTAMA: AMBIL DATA DENGAN AMAN, TIDAK ERROR WALAU KOSONG
+    let val;
+    val = document.getElementById('fullname') ? document.getElementById('fullname').value : "";
+    const n = val.toUpperCase() || "";
+
+    val = document.getElementById('participantId') ? document.getElementById('participantId').value : "";
+    const id = val || "";
+
+    val = document.getElementById('school') ? document.getElementById('school').value : "";
+    const sch = val.toUpperCase() || "";
+
+    val = document.getElementById('dob') ? document.getElementById('dob').value : "";
+    const tgl = val || "";
+
+    val = document.getElementById('userEmail') ? document.getElementById('userEmail').value : "";
+    const email = val || ""; // ✅ AMAN, DATA EMAIL TETAP DIAMBIL
 
     // --- AMBIL DATA KAMPUS PILIHAN ---
-    const u1 = document.getElementById('univ-1')?.value.toUpperCase().trim() || "";
-    const j1 = document.getElementById('jurusan-1')?.value.trim() || "";
-    const u2 = document.getElementById('univ-2')?.value.toUpperCase().trim() || "";
-    const j2 = document.getElementById('jurusan-2')?.value.trim() || "";
+    val = document.getElementById('univ-1') ? document.getElementById('univ-1').value : "";
+    const u1 = val.toUpperCase().trim() || "";
+
+    val = document.getElementById('jurusan-1') ? document.getElementById('jurusan-1').value : "";
+    const j1 = val.trim() || "";
+
+    val = document.getElementById('univ-2') ? document.getElementById('univ-2').value : "";
+    const u2 = val.toUpperCase().trim() || "";
+
+    val = document.getElementById('jurusan-2') ? document.getElementById('jurusan-2').value : "";
+    const j2 = val.trim() || "";
 
     // ======================================================
     // BAGIAN VALIDASI & PESAN ERROR
@@ -925,7 +947,6 @@
             setTimeout(() => { if(sop) sop.style.opacity = '1'; }, 50);
         }, 500);
     } catch (err) {
-        // JIKA TERJADI ERROR APA PUN, TAMPILKAN DI SINI BIAR TIDAK PUTIH
         alert("Terjadi kesalahan sistem: " + err.message + ". Silakan muat ulang halaman.");
     }
 }
@@ -1475,99 +1496,6 @@ fetch(SCRIPT_URL, {
             }, 100);
         }
     }
-
-    // ==========================================
-// SENSOR KEAMANAN (PERBAIKAN DOUBLE COUNT)
-// ==========================================
-
-function processViolation() {
-// 🔒 SUDAH BENAR: Kondisi ini memastikan TIDAK HITUNG saat belum mulai/selesai/blokir/pesan muncul
-if (!examStarted || isBlocked || isExamFinished || isWarningModalOpen) return;
-
-    // 2. CEK JEDA WAKTU (SOLUSI DOUBLE HITUNG)
-    const now = Date.now();
-    if (now - lastViolationTime < 2000) {
-        return; 
-    }
-    lastViolationTime = now;
-
-    // 3. Tambah Pelanggaran
-    violationCount++;
-    setData('violationCount', violationCount);
-
-    // 4. Update Tampilan Angka
-    if (countDisplay) countDisplay.innerText = violationCount;
-    if (modalViolationCountSpan) modalViolationCountSpan.innerText = violationCount;
-    if (modalRemainingCountSpan) modalRemainingCountSpan.innerText = (MAX_PELANGGARAN - violationCount);
-
-    // 5. Cek Hukuman
-    if (violationCount >= MAX_PELANGGARAN) {
-        if (typeof blockExam === 'function') blockExam();
-    } else {
-        if (customWarningModal) {
-            customWarningModal.style.display = 'flex';
-            isWarningModalOpen = true;
-        }
-    }
-
-}
-
-// ==========================================
-// FUNGSI BLOKIR (WAJIB ADA AGAR LAYAR MERAH MUNCUL)
-// ==========================================
-function blockExam() {
-    console.log("BLOKIR DIEKSEKUSI!");
-    
-    // 1. Set Status Terblokir
-    isBlocked = true;
-    try { setData('isBlocked', 'true'); } catch (e) { localStorage.setItem('isBlocked', 'true'); }
-
-    // 2. Munculkan Layar Merah
-    const screen = document.getElementById('blockScreen');
-    if (screen) {
-        screen.style.display = 'flex'; 
-    } else {
-        alert("ANDA DIBLOKIR KARENA PELANGGARAN!");
-        document.body.innerHTML = "<h1 style='color:red; text-align:center; padding-top:100px;'>AKSES UJIAN DIBLOKIR</h1>";
-    }
-    
-    // 3. Matikan Timer
-    if (window.timerInterval) clearInterval(window.timerInterval);
-}
-
-// Pasang Sensor Baru
-window.addEventListener('blur', processViolation);
-
-// 🔴 BAGIAN INI YANG DIPERBAIKI KHUSUS HP
-document.addEventListener('visibilitychange', () => {
-    // ✅ SYARAT LENGKAP: Hanya hitung jika: Halaman disembunyikan DAN Ujian SUDAH mulai DAN TIDAK sedang ada pesan peringatan
-    if (document.hidden && examStarted && !isBlocked && !isWarningModalOpen) {
-        processViolation();
-    }
-});
-
-// KEYBOARD SHORTCUTS
-document.addEventListener('keydown', function(e) {
-    // Reset: Ctrl + Shift + 9
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 57) {
-        e.preventDefault();
-        setTimeout(() => {
-            let pass = prompt("PASSWORD RESET:");
-            if (pass === PASSWORD_RESET) {
-                clearData();
-                alert("Sistem Reset. Reloading...");
-                location.reload(); 
-            } else if(pass) {
-                alert("Password Salah!");
-            }
-        }, 100);
-        return false;
-    }
-    // Block Inspect
-    if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67 || e.keyCode == 85))) {
-        e.preventDefault(); return false;
-    }
-});
 
     // ==========================================
     // 6. FITUR RESET KHUSUS HP (TAHAN LAYAR 5 DETIK)
