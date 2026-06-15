@@ -481,15 +481,37 @@
     line-height: 1.2;        /* Jarak antar baris jika teks lebih dari 1 baris */
 }
 
+        /* PERBAIKAN AMAN: Penyesuaian Teks Otomatis */
+.q-text, .cert-user-table, .cert-score-table {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+.cert-score-table td {
+    font-size: clamp(11px, 2.5vw, 13px) !important;
+}
+
 
     </style>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" 
-        onload="renderMathInElement(document.body);"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script>
+// PERBAIKAN: Jalankan render hanya jika library berhasil dimuat
+window.addEventListener('load', function() {
+  if (typeof renderMathInElement === 'function') {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "$", right: "$", display: false}
+      ],
+      throwOnError: false,
+      errorColor: '#cc0000'
+    });
+  }
+});
+</script>
 
 </head>
 <body>
@@ -1057,17 +1079,17 @@ renderMathInElement(document.getElementById("examInterface"), {
     // ==========================================
     
     function processViolation() {
-    // 🔒 PENGAMAN MUTLAK: JANGAN LAKUKAN APA-APA JIKA UJIAN BELUM MULAI / SUDAH SELESAI / DIBLOKIR / ADA PESAN
-    if (!examStarted || isBlocked || isExamFinished || isWarningModalOpen) {
+    // 🔒 PENGAMAN MUTLAK: JANGAN LAKUKAN APA-APA JIKA TIDAK SYARAT
+    if (!examStarted || isBlocked || isExamFinished || isWarningModalOpen || document.hidden === false) {
         return; 
     }
 
-        // 2. CEK JEDA WAKTU (SOLUSI DOUBLE HITUNG)
-        const now = Date.now();
-        if (now - lastViolationTime < 2000) {
-            return; 
-        }
-        lastViolationTime = now;
+    // 2. CEK JEDA WAKTU DIPERPANJANG JADI 3 DETIK (LEBIH AMAN)
+    const now = Date.now();
+    if (now - lastViolationTime < 3000) {
+        return; 
+    }
+    lastViolationTime = now;
 
         // 3. Tambah Pelanggaran
         violationCount++;
@@ -1654,8 +1676,10 @@ const selectJurusan2 = document.getElementById('jurusan-2');
 ambilDataDariGS();
 
 function ambilDataDariGS() {
-    console.log("Mengambil data...");
-
+    // PERBAIKAN: Beri pesan saat memuat
+    inputUniv1.placeholder = "Sedang memuat daftar kampus...";
+    inputUniv2.placeholder = "Sedang memuat daftar kampus...";
+    
     fetch(SCRIPT_URL_GET)
     .then(res => res.json())
     .then(data => {
@@ -1677,8 +1701,11 @@ function ambilDataDariGS() {
         });
     })
     .catch(err => {
-        alert("Gagal terhubung ke Server: " + err); // <-- Kalau URL salah / internet mati, muncul ini.
-    });
+    inputUniv1.placeholder = "Gagal memuat, coba muat ulang";
+    inputUniv2.placeholder = "Gagal memuat, coba muat ulang";
+    // Hapus alert agar tidak mengganggu, cukup tulisan di kotak
+    console.log("Error GS:", err);
+});
 }
 
 // Filter Jurusan 1
