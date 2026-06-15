@@ -537,70 +537,65 @@
             </div>
         </div>
         <div class="form-side">
-    <div class="form-header">
-        <h2>Konfirmasi Data Peserta</h2>
-        <span>Silakan isi data diri Anda dengan benar.</span>
-    </div>
-    <form id="loginForm" onsubmit="handleLogin(event)">
-        <div class="form-group">
-            <label>Nama Lengkap</label>
-            <input type="text" class="form-control" id="fullname" placeholder="CONTOH: BUDI SANTOSO" required oninput="this.value = this.value.toUpperCase()" style="text-transform: uppercase">
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group"><label>Nomor Peserta</label><input type="number" inputmode="numeric" class="form-control" id="participantId" required></div>
+            <div class="form-header">
+                <h2>Konfirmasi Data Peserta</h2>
+                <span>Silakan isi data diri Anda dengan benar.</span>
             </div>
-            <div class="col">
-                <div class="form-group"><label>NISN</label><input type="number" inputmode="numeric" class="form-control" id="nisn" required></div>
-            </div>
-        </div>
-        <div class="form-group"><label>Asal Sekolah</label><input type="text" class="form-control" id="school" required oninput="this.value = this.value.toUpperCase()" style="text-transform: uppercase"></div>
-        <div class="form-group"><label>Tanggal Lahir</label><input type="date" class="form-control" id="dob" required></div>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" class="form-control" id="fullname" placeholder="CONTOH: BUDI SANTOSO" required oninput="this.value = this.value.toUpperCase()"
+        style="text-transform: uppercase">
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group"><label>Nomor Peserta</label><input type="number" inputmode="numeric" class="form-control" id="participantId" required></div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group"><label>NISN</label><input type="number" inputmode="numeric" class="form-control" id="nisn" required></div>
+                    </div>
+                </div>
+                <div class="form-group"><label>Asal Sekolah</label><input type="text" class="form-control" id="school" required oninput="this.value = this.value.toUpperCase()"
+        style="text-transform: uppercase"></div>
+                <div class="form-group"><label>Tanggal Lahir</label><input type="date" class="form-control" id="dob" required></div>
 
-        <!-- ✅ BAGIAN BARU: KOLOM EMAIL PESERTA -->
-        <div class="form-group">
-            <label>Alamat Email <small style="color:#dc3545; font-weight:normal;">(Wajib diisi untuk menerima hasil ujian)</small></label>
-            <input type="email" class="form-control" id="userEmail" placeholder="contoh: nama@email.com" required>
-            <small style="color:#666; font-size:11px;">Pastikan email aktif dan benar, sertifikat & laporan evaluasi akan dikirim ke sini.</small>
-        </div>
-        <!-- ====================================== -->
 
-
-        <div class="form-group" style="margin-top: 12px;">
-            <label><b>Pilihan Universitas 1</b></label>
-            <input list="list-univ-1" id="univ-1" class="form-control" placeholder="Ketik & pilih kampus 1...">
-            <datalist id="list-univ-1"></datalist>
-        </div>
-
-        <div class="form-group" style="margin-top: 8px;">
-            <label>Pilihan Jurusan 1</label>
-            <select id="jurusan-1" class="form-control" disabled>
-                <option value="">-- Pilih Universitas 1 Terlebih Dahulu --</option>
-            </select>
-        </div>
-
-        <hr style="border-top: 1px dashed #ccc; margin: 15px 0;">
-
-        <div class="form-group">
-            <label><b>Pilihan Universitas 2</b></label>
-            <input list="list-univ-2" id="univ-2" class="form-control" placeholder="Ketik & pilih kampus 2...">
-            <datalist id="list-univ-2"></datalist>
-        </div>
-
-        <div class="form-group" style="margin-top: 8px;">
-            <label>Pilihan Jurusan 2</label>
-            <select id="jurusan-2" class="form-control" disabled>
-                <option value="">-- Pilih Universitas 2 Terlebih Dahulu --</option>
-            </select>
-        </div>
-
-        <div class="form-group" style="display:flex; gap:10px; margin-top:20px;">
-            <input type="checkbox" id="consent" required style="margin-top:4px;">
-            <label for="consent" style="font-weight:400; font-size:12px; color:#666; cursor:pointer;">Saya menyatakan bahwa data yang saya isikan adalah benar. Saya siap mengerjakan ujian dengan jujur dan menerima sanksi diskualifikasi (layar merah/blokir) jika terdeteksi melakukan kecurangan..</label>
-        </div>
-        <button type="submit" class="btn-submit">VERIFIKASI & MASUK RUANG UJIAN</button>
-    </form>
+            <div class="form-group" style="margin-top: 12px;">
+  <label><b>Pilihan Universitas 1</b></label>
+  <input list="list-univ-1" id="univ-1" class="form-control" placeholder="Ketik & pilih kampus 1...">
+  <datalist id="list-univ-1"></datalist>
 </div>
+
+<div class="form-group" style="margin-top: 8px;">
+  <label>Pilihan Jurusan 1</label>
+  <select id="jurusan-1" class="form-control" disabled>
+    <option value="">-- Pilih Universitas 1 Terlebih Dahulu --</option>
+  </select>
+</div>
+
+<hr style="border-top: 1px dashed #ccc; margin: 15px 0;">
+
+<div class="form-group">
+  <label><b>Pilihan Universitas 2</b></label>
+  <input list="list-univ-2" id="univ-2" class="form-control" placeholder="Ketik & pilih kampus 2...">
+  <datalist id="list-univ-2"></datalist>
+</div>
+
+<div class="form-group" style="margin-top: 8px;">
+  <label>Pilihan Jurusan 2</label>
+  <select id="jurusan-2" class="form-control" disabled>
+    <option value="">-- Pilih Universitas 2 Terlebih Dahulu --</option>
+  </select>
+</div>
+                
+                <div class="form-group" style="display:flex; gap:10px; margin-top:20px;">
+                    <input type="checkbox" id="consent" required style="margin-top:4px;">
+                    <label for="consent" style="font-weight:400; font-size:12px; color:#666; cursor:pointer;">Saya menyatakan bahwa data yang saya isikan adalah benar. Saya siap mengerjakan ujian dengan jujur dan menerima sanksi diskualifikasi (layar merah/blokir) jika terdeteksi melakukan kecurangan..</label>
+                </div>
+                <button type="submit" class="btn-submit">VERIFIKASI & MASUK RUANG UJIAN</button>
+            </form>
+        </div>
+    </div>
 
     <div id="sopOverlay" class="sop-overlay">
         <div class="sop-card">
@@ -722,8 +717,6 @@
 
     <script>
     
-        
-        
     // Tambahkan variabel ini di deretan variabel paling atas
     let isExamFinished = false;
 
@@ -812,18 +805,14 @@
         // Cek progres
         const saved = localStorage.getItem('snbt_progress');
         if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                // Validasi sederhana
-                if (data.userData && data.userData.name) {
-                    if (confirm("Ditemukan progres ujian sebelumnya. Ingin melanjutkan?")) {
-                        restoreSession(data);
-                    } else {
-                        localStorage.removeItem('snbt_progress');
-                    }
+            const data = JSON.parse(saved);
+            // Validasi sederhana
+            if (data.userData && data.userData.name) {
+                if (confirm("Ditemukan progres ujian sebelumnya. Ingin melanjutkan?")) {
+                    restoreSession(data);
+                } else {
+                    localStorage.removeItem('snbt_progress');
                 }
-            } catch(e) {
-                localStorage.removeItem('snbt_progress');
             }
         }
     };
@@ -852,115 +841,93 @@
     function handleLogin(e) {
     e.preventDefault();
     
-    // ✅ AMBIL DATA DENGAN CARA PALING AMAN, TIDAK PAKAI OPERATOR BAHAYA
-    let val;
-
-    val = document.getElementById('fullname') ? document.getElementById('fullname').value : "";
-    const n = val.toUpperCase();
-
-    val = document.getElementById('participantId') ? document.getElementById('participantId').value : "";
-    const id = val;
-
-    val = document.getElementById('school') ? document.getElementById('school').value : "";
-    const sch = val.toUpperCase();
-
-    val = document.getElementById('dob') ? document.getElementById('dob').value : "";
-    const tgl = val;
-
-    val = document.getElementById('userEmail') ? document.getElementById('userEmail').value : "";
-    const email = val;
+    // Ambil semua nilai dari formulir
+    const n = document.getElementById('fullname').value.toUpperCase();
+    const id = document.getElementById('participantId').value;
+    const sch = document.getElementById('school').value.toUpperCase();
+    const tgl = document.getElementById('dob').value; 
 
     // --- AMBIL DATA KAMPUS PILIHAN ---
-    val = document.getElementById('univ-1') ? document.getElementById('univ-1').value : "";
-    const u1 = val.toUpperCase().trim();
-
-    val = document.getElementById('jurusan-1') ? document.getElementById('jurusan-1').value : "";
-    const j1 = val.trim();
-
-    val = document.getElementById('univ-2') ? document.getElementById('univ-2').value : "";
-    const u2 = val.toUpperCase().trim();
-
-    val = document.getElementById('jurusan-2') ? document.getElementById('jurusan-2').value : "";
-    const j2 = val.trim();
+    const u1 = document.getElementById('univ-1').value.toUpperCase().trim();
+    const j1 = document.getElementById('jurusan-1').value.trim();
+    const u2 = document.getElementById('univ-2').value.toUpperCase().trim();
+    const j2 = document.getElementById('jurusan-2').value.trim();
 
     // ======================================================
-    // BAGIAN VALIDASI (DISEDERHANAKAN AGAR TIDAK ERROR)
+    // ✅ BAGIAN PENGECEKAN & PESAN ERROR TANPA ALERT
     // ======================================================
+    
+    // Cari elemen pesan error (kita buat dinamis)
     let errorBox = document.getElementById('errorNotification');
+    // Jika belum ada, buat kotak pesannya di bawah tombol
     if (!errorBox) {
         errorBox = document.createElement('div');
         errorBox.id = 'errorNotification';
-        errorBox.style.cssText = "color:#dc3545; font-weight:bold; text-align:center; padding:10px; margin-top:15px; border:1px solid #dc3545; border-radius:5px; background:#f8d7da;";
-        const lastGroup = document.querySelector('.form-group:last-child');
-        if(lastGroup) lastGroup.after(errorBox);
+        errorBox.style.color = '#dc3545'; // Warna Merah
+        errorBox.style.fontWeight = 'bold';
+        errorBox.style.textAlign = 'center';
+        errorBox.style.padding = '10px';
+        errorBox.style.marginTop = '15px';
+        errorBox.style.border = '1px solid #dc3545';
+        errorBox.style.borderRadius = '5px';
+        errorBox.style.backgroundColor = '#f8d7da';
+        // Tempelkan di paling bawah form
+        document.querySelector('.form-group:last-child').after(errorBox);
     }
 
     let pesanKesalahan = "";
 
-    // Cek Nama & Nomor
-    if(!n) pesanKesalahan += "❌ Nama Lengkap wajib diisi!<br>";
-    if(!id) pesanKesalahan += "❌ Nomor Peserta wajib diisi!<br>";
-    if(!sch) pesanKesalahan += "❌ Asal Sekolah wajib diisi!<br>";
-    if(!tgl) pesanKesalahan += "❌ Tanggal Lahir wajib diisi!<br>";
-
-    // Cek Email
-    if (!email) {
-        pesanKesalahan += "❌ Alamat Email WAJIB diisi!<br>";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        pesanKesalahan += "❌ Format Email SALAH!<br>";
+    // Cek Pilihan 1
+    if (u1 === "" || j1 === "") {
+        pesanKesalahan += "❌ Pilihan Universitas & Jurusan 1 WAJIB diisi lengkap!<br>";
     }
 
-    // Cek Kampus (PENTING: Kita cek ISINYA, bukan dari database lagi)
-    if (!u1 || !j1) pesanKesalahan += "❌ Pilihan Universitas & Jurusan 1 WAJIB diisi lengkap!<br>";
-    if (!u2 || !j2) pesanKesalahan += "❌ Pilihan Universitas & Jurusan 2 WAJIB diisi lengkap!<br>";
+    // Cek Pilihan 2
+    if (u2 === "" || j2 === "") {
+        pesanKesalahan += "❌ Pilihan Universitas & Jurusan 2 WAJIB diisi lengkap!<br>";
+    }
 
-    // JIKA ADA KESALAHAN
-    if (pesanKesalahan) {
-        errorBox.innerHTML = pesanKesalahan;
-        window.scrollTo({top:0});
-        return;
+    // Jika ada yang kosong
+    if (pesanKesalahan !== "") {
+        // Tampilkan pesan di halaman, TIDAK PAKAI ALERT
+        errorBox.innerHTML = pesanKesalahan + "<small style='color:#990000;'>Lengkapi data sebelum lanjut.</small>";
+        // Gulirkan layar ke atas agar terlihat pesannya
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        return; // STOP, tidak lanjut
     } else {
+        // Jika benar semua, hilangkan pesan error
         errorBox.remove();
     }
+    // ======================================================
+    // ✅ SELESAI: TIDAK ADA POPUP, AMAN DARI PELANGGARAN
+    // ======================================================
 
-    // ✅ SIMPAN DATA
+    // Simpan ke variabel global 'userData'
     userData = { 
         name: n, 
         id: id, 
         school: sch, 
         birthDate: tgl,
-        email: email,
         univ1: u1,
         jurusan1: j1,
         univ2: u2,
         jurusan2: j2
     };
 
-    // ✅ PROSES PINDAH HALAMAN (DIKUNCI KERAS, TIDAK BOLEH GAGAL)
-    try {
-        document.getElementById('loginCard').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('loginCard').style.display = 'none';
-            const sop = document.getElementById('sopOverlay');
-            if(sop) {
-                sop.style.display = 'flex';
-                sop.style.opacity = '1';
-            }
-            
-            const lobbyDisplay = document.getElementById('userDisplayLobby');
-            if(lobbyDisplay) {
-                lobbyDisplay.innerHTML = `
-                    <span class="user-name-big">${n}</span>
-                    <span class="user-meta">NO: ${id} | ${sch}</span>
-                    <br><small style="color:#ddd;">Pil 1: ${j1} (${u1}) | Pil 2: ${j2} (${u2})</small>
-                `;
-            }
-        }, 300);
-    } catch (err) {
-        // Kalau ada error apa pun, langsung alihkan pakai cara kasar
-        alert("Sistem memuat ulang tampilan...");
-        location.reload();
-    }
+    // Transisi ke Lobby (Hanya jalan jika semua data lengkap)
+    document.getElementById('loginCard').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('loginCard').style.display = 'none';
+        const sop = document.getElementById('sopOverlay');
+        sop.style.display = 'flex';
+        
+        document.getElementById('userDisplayLobby').innerHTML = `
+            <span class="user-name-big">${n}</span>
+            <span class="user-meta">NO: ${id} | ${sch}</span>
+            <br><small style="color:#ddd;">Pil 1: ${j1} (${u1}) | Pil 2: ${j2} (${u2})</small>
+        `;
+        setTimeout(() => sop.style.opacity = '1', 50);
+    }, 500);
 }
     // ==========================================
     // 2. MULAI UJIAN (START)
@@ -1019,7 +986,6 @@ function loadQuestion(index) {
         document.getElementById('qTextDisplay').innerHTML = htmlContent;
 
         // Perintah agar KaTeX mencari simbol $ dan mengubahnya jadi rumus matematika
-if (typeof renderMathInElement !== 'undefined') {
 renderMathInElement(document.getElementById("qTextDisplay"), {
     delimiters: [
         {left: "$$", right: "$$", display: true},
@@ -1027,7 +993,6 @@ renderMathInElement(document.getElementById("qTextDisplay"), {
     ],
     throwOnError: false
 });
-}
 
         // --- OPSI JAWABAN ---
         const box = document.getElementById('optionsContainer');
@@ -1042,7 +1007,7 @@ renderMathInElement(document.getElementById("qTextDisplay"), {
             box.appendChild(div);
         });
 
-if (typeof renderMathInElement !== 'undefined') {
+// Letakkan ini setelah teks soal dan opsi jawaban muncul di layar
 renderMathInElement(document.getElementById("examInterface"), {
     delimiters: [
         {left: "$$", right: "$$", display: true},
@@ -1050,7 +1015,6 @@ renderMathInElement(document.getElementById("examInterface"), {
     ],
     throwOnError: false
 });
-}
         renderNavGrid();
         saveProgress();
     }
@@ -1354,48 +1318,44 @@ for (let key in examData) {
     };
 }
     // ==========================================
-// 2. KIRIM KE SPREADSHEET (LATAR BELAKANG)
-// ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxW2OF4yoLFo5gVYjdha39mk3MIsUFwC6dAtfq1Bp_pdzeC9DNqyeS8rAnoePPnJrk8/exec";
-
-// ✅ URUTAN SUDAH 100% SAMA DENGAN GOOGLE SCRIPT KAMU
-let dataKirim = {
-    nama: userData.name || "-",
-    nomor: userData.id || "-",
-    sekolah: userData.school || "-",
-    tgl_lahir: userData.birthDate || "-",
+    // 2. KIRIM KE SPREADSHEET (LATAR BELAKANG)
+    // ==========================================
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxW2OF4yoLFo5gVYjdha39mk3MIsUFwC6dAtfq1Bp_pdzeC9DNqyeS8rAnoePPnJrk8/exec";
+    
+    // Mapping Data: Menyesuaikan "bi/en" (HTML) ke "lit_indo/lit_ingg" (Apps Script)
+    let dataKirim = {
+        nama: userData.name || "-",
+        nomor: userData.id || "-",
+        sekolah: userData.school || "-",
+        tgl_lahir: userData.birthDate || "-",
+        // --- DATA KAMPUS BARU YANG AKAN MASUK KE GS ---
     pilihan_univ_1: userData.univ1 || "-",
     pilihan_jurusan_1: userData.jurusan1 || "-",
     pilihan_univ_2: userData.univ2 || "-",
     pilihan_jurusan_2: userData.jurusan2 || "-",
+    // ----------------------------------------------
+        pelanggaran: violationCount || 0,
 
-    benar_pu: stats['pu']?.correct || 0,
-    skor_pu: stats['pu']?.score || 0,
-    benar_ppu: stats['ppu']?.correct || 0,
-    skor_ppu: stats['ppu']?.score || 0,
-    benar_pbm: stats['pbm']?.correct || 0,
-    skor_pbm: stats['pbm']?.score || 0,
-    benar_pk: stats['pk']?.correct || 0,
-    skor_pk: stats['pk']?.score || 0,
-    
-    benar_lit_indo: stats['bi']?.correct || 0,
-    skor_lit_indo: stats['bi']?.score || 0,
-    benar_lit_ingg: stats['en']?.correct || 0,
-    skor_lit_ingg: stats['en']?.score || 0,
-    
-    benar_pm: stats['pm']?.correct || 0,
-    skor_pm: stats['pm']?.score || 0,
+        // Ambil data dari hasil hitungan di atas (pakai ?. agar tidak error jika mapel tidak ada)
+        benar_pu: stats['pu']?.correct || 0,   skor_pu: stats['pu']?.score || 0,
+        benar_ppu: stats['ppu']?.correct || 0, skor_ppu: stats['ppu']?.score || 0,
+        benar_pbm: stats['pbm']?.correct || 0, skor_pbm: stats['pbm']?.score || 0,
+        benar_pk: stats['pk']?.correct || 0,   skor_pk: stats['pk']?.score || 0,
+        
+        // Perhatikan bagian ini: Mapping BI -> lit_indo, EN -> lit_ingg
+        benar_lit_indo: stats['bi']?.correct || 0, skor_lit_indo: stats['bi']?.score || 0,
+        benar_lit_ingg: stats['en']?.correct || 0, skor_lit_ingg: stats['en']?.score || 0,
+        
+        benar_pm: stats['pm']?.correct || 0,   skor_pm: stats['pm']?.score || 0
+    };
 
-    pelanggaran: violationCount || 0,
-    email: userData.email || "-" // ✅ EMAIL DI URUTAN TERAKHIR (KOLOM Y)
-};
-
-fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(dataKirim)
-}).catch(e => console.log("Gagal lapor spreadsheet:", e));
+    // Kirim (Fire and Forget)
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataKirim)
+    }).catch(e => console.log("Gagal lapor spreadsheet:", e));
 
     // ==========================================
     // 3. TAMPILKAN SERTIFIKAT (FORMAT LAMA ANDA)
@@ -1513,6 +1473,99 @@ fetch(SCRIPT_URL, {
     }
 
     // ==========================================
+// SENSOR KEAMANAN (PERBAIKAN DOUBLE COUNT)
+// ==========================================
+
+function processViolation() {
+// 🔒 SUDAH BENAR: Kondisi ini memastikan TIDAK HITUNG saat belum mulai/selesai/blokir/pesan muncul
+if (!examStarted || isBlocked || isExamFinished || isWarningModalOpen) return;
+
+    // 2. CEK JEDA WAKTU (SOLUSI DOUBLE HITUNG)
+    const now = Date.now();
+    if (now - lastViolationTime < 2000) {
+        return; 
+    }
+    lastViolationTime = now;
+
+    // 3. Tambah Pelanggaran
+    violationCount++;
+    setData('violationCount', violationCount);
+
+    // 4. Update Tampilan Angka
+    if (countDisplay) countDisplay.innerText = violationCount;
+    if (modalViolationCountSpan) modalViolationCountSpan.innerText = violationCount;
+    if (modalRemainingCountSpan) modalRemainingCountSpan.innerText = (MAX_PELANGGARAN - violationCount);
+
+    // 5. Cek Hukuman
+    if (violationCount >= MAX_PELANGGARAN) {
+        if (typeof blockExam === 'function') blockExam();
+    } else {
+        if (customWarningModal) {
+            customWarningModal.style.display = 'flex';
+            isWarningModalOpen = true;
+        }
+    }
+
+}
+
+// ==========================================
+// FUNGSI BLOKIR (WAJIB ADA AGAR LAYAR MERAH MUNCUL)
+// ==========================================
+function blockExam() {
+    console.log("BLOKIR DIEKSEKUSI!");
+    
+    // 1. Set Status Terblokir
+    isBlocked = true;
+    try { setData('isBlocked', 'true'); } catch (e) { localStorage.setItem('isBlocked', 'true'); }
+
+    // 2. Munculkan Layar Merah
+    const screen = document.getElementById('blockScreen');
+    if (screen) {
+        screen.style.display = 'flex'; 
+    } else {
+        alert("ANDA DIBLOKIR KARENA PELANGGARAN!");
+        document.body.innerHTML = "<h1 style='color:red; text-align:center; padding-top:100px;'>AKSES UJIAN DIBLOKIR</h1>";
+    }
+    
+    // 3. Matikan Timer
+    if (window.timerInterval) clearInterval(window.timerInterval);
+}
+
+// Pasang Sensor Baru
+window.addEventListener('blur', processViolation);
+
+// 🔴 BAGIAN INI YANG DIPERBAIKI KHUSUS HP
+document.addEventListener('visibilitychange', () => {
+    // ✅ SYARAT LENGKAP: Hanya hitung jika: Halaman disembunyikan DAN Ujian SUDAH mulai DAN TIDAK sedang ada pesan peringatan
+    if (document.hidden && examStarted && !isBlocked && !isWarningModalOpen) {
+        processViolation();
+    }
+});
+
+// KEYBOARD SHORTCUTS
+document.addEventListener('keydown', function(e) {
+    // Reset: Ctrl + Shift + 9
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 57) {
+        e.preventDefault();
+        setTimeout(() => {
+            let pass = prompt("PASSWORD RESET:");
+            if (pass === PASSWORD_RESET) {
+                clearData();
+                alert("Sistem Reset. Reloading...");
+                location.reload(); 
+            } else if(pass) {
+                alert("Password Salah!");
+            }
+        }, 100);
+        return false;
+    }
+    // Block Inspect
+    if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67 || e.keyCode == 85))) {
+        e.preventDefault(); return false;
+    }
+});
+
+    // ==========================================
     // 6. FITUR RESET KHUSUS HP (TAHAN LAYAR 5 DETIK)
     // ==========================================
 
@@ -1581,7 +1634,7 @@ fetch(SCRIPT_URL, {
     });
 
         // =======================================================
-// PERBAIKAN MUTLAK: AMBIL DATA PTN TAPI JANGAN GANGGU LOGIN
+// PERBAIKAN MUTLAK: SINKRONISASI DATA PTN
 // =======================================================
 
 // 1. PASTIKAN URL INI ADALAH URL TERBARU HASIL DEPLOY!
@@ -1597,26 +1650,34 @@ const inputUniv2 = document.getElementById('univ-2');
 const selectJurusan1 = document.getElementById('jurusan-1');
 const selectJurusan2 = document.getElementById('jurusan-2');
 
-// ✅ DIPERBAIKI: Ambil data tapi JANGAN GANGGU proses login kalau gagal
-window.addEventListener('DOMContentLoaded', function() {
-    ambilDataDariGS();
-});
+// JALANKAN LANGSUNG TANPA TUNGGU DOM LOADED
+ambilDataDariGS();
 
 function ambilDataDariGS() {
+    console.log("Mengambil data...");
+
     fetch(SCRIPT_URL_GET)
     .then(res => res.json())
     .then(data => {
-        if (data.error) return;
+        if (data.error) {
+            alert("ERROR GS: " + data.error); // <-- INI PENTING! Kalau ada salah nama sheet, akan muncul pesan ini.
+            return;
+        }
+
         databasePTN = data;
+        console.log("Data berhasil dimuat: ", databasePTN.length, " data");
+
+        // Ambil daftar nama universitas unik
         const daftarUniv = [...new Set(databasePTN.map(item => item.u))].sort();
+
+        // Masukkan ke kotak input
         daftarUniv.forEach(namaUniv => {
             listUniv1.appendChild(new Option(namaUniv, namaUniv));
             listUniv2.appendChild(new Option(namaUniv, namaUniv));
         });
     })
     .catch(err => {
-        // Diam saja, jangan tampilkan error agar tidak mengganggu
-        console.log("Data kampus tidak dimuat, tapi form tetap jalan");
+        alert("Gagal terhubung ke Server: " + err); // <-- Kalau URL salah / internet mati, muncul ini.
     });
 }
 
@@ -1634,7 +1695,7 @@ inputUniv1.addEventListener('input', function() {
         });
     } else {
         selectJurusan1.disabled = true;
-        selectJurusan1.appendChild(new Option("-- Ketik Manual / Tidak Ditemukan --", ""));
+        selectJurusan1.appendChild(new Option("-- Universitas Tidak Ditemukan --", ""));
     }
 });
 
@@ -1652,7 +1713,7 @@ inputUniv2.addEventListener('input', function() {
         });
     } else {
         selectJurusan2.disabled = true;
-        selectJurusan2.appendChild(new Option("-- Ketik Manual / Tidak Ditemukan --", ""));
+        selectJurusan2.appendChild(new Option("-- Universitas Tidak Ditemukan --", ""));
     }
 });
     
