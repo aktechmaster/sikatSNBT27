@@ -581,12 +581,6 @@ window.addEventListener('load', function() {
         style="text-transform: uppercase"></div>
                 <div class="form-group"><label>Tanggal Lahir</label><input type="date" class="form-control" id="dob" required></div>
 
-                <div class="form-group">
-    <label>Alamat Email</label>
-    <input type="email" class="form-control" id="email" placeholder="contoh: nama@email.com" required>
-    <small style="color:#888; font-size:11px;">*Pastikan email aktif dan benar</small>
-</div>
-
 
             <div class="form-group" style="margin-top: 12px;">
   <label><b>Pilihan Universitas 1</b></label>
@@ -874,7 +868,6 @@ window.addEventListener('load', function() {
     const id = document.getElementById('participantId').value;
     const sch = document.getElementById('school').value.toUpperCase();
     const tgl = document.getElementById('dob').value; 
-    const email = document.getElementById('email').value.trim(); // Ambil data Email
 
     // --- AMBIL DATA KAMPUS PILIHAN ---
     const u1 = document.getElementById('univ-1').value.toUpperCase().trim();
@@ -941,7 +934,6 @@ window.addEventListener('load', function() {
         jurusan1: j1,
         univ2: u2,
         jurusan2: j2
-        email: email
     };
 
     // Transisi ke Lobby (Hanya jalan jika semua data lengkap)
@@ -950,12 +942,10 @@ window.addEventListener('load', function() {
         document.getElementById('loginCard').style.display = 'none';
         const sop = document.getElementById('sopOverlay');
         sop.style.display = 'flex';
-
-        const emailTampil = userData.email || "-";
+        
         document.getElementById('userDisplayLobby').innerHTML = `
             <span class="user-name-big">${n}</span>
             <span class="user-meta">NO: ${id} | ${sch}</span>
-            <span class="user-meta">📧 ${email}</span>
             <br><small style="color:#ddd;">Pil 1: ${j1} (${u1}) | Pil 2: ${j2} (${u2})</small>
         `;
         setTimeout(() => sop.style.opacity = '1', 50);
@@ -1356,25 +1346,30 @@ for (let key in examData) {
     
     // Mapping Data: Menyesuaikan "bi/en" (HTML) ke "lit_indo/lit_ingg" (Apps Script)
     let dataKirim = {
-    nama: userData.name || "-",
-    nomor: userData.id || "-",
-    sekolah: userData.school || "-",
-    tgl_lahir: userData.birthDate || "-",
+        nama: userData.name || "-",
+        nomor: userData.id || "-",
+        sekolah: userData.school || "-",
+        tgl_lahir: userData.birthDate || "-",
+        // --- DATA KAMPUS BARU YANG AKAN MASUK KE GS ---
     pilihan_univ_1: userData.univ1 || "-",
     pilihan_jurusan_1: userData.jurusan1 || "-",
     pilihan_univ_2: userData.univ2 || "-",
     pilihan_jurusan_2: userData.jurusan2 || "-",
-    pelanggaran: violationCount || 0,
-    email: userData.email || "-", // ✅ POSISI INI SUDAH BENAR (SEBELUM NILAI)
+    // ----------------------------------------------
+        pelanggaran: violationCount || 0,
 
-    benar_pu: stats['pu']?.correct || 0,   skor_pu: stats['pu']?.score || 0,
-    benar_ppu: stats['ppu']?.correct || 0, skor_ppu: stats['ppu']?.score || 0,
-    benar_pbm: stats['pbm']?.correct || 0, skor_pbm: stats['pbm']?.score || 0,
-    benar_pk: stats['pk']?.correct || 0,   skor_pk: stats['pk']?.score || 0,
-    benar_lit_indo: stats['bi']?.correct || 0, skor_lit_indo: stats['bi']?.score || 0,
-    benar_lit_ingg: stats['en']?.correct || 0, skor_lit_ingg: stats['en']?.score || 0,
-    benar_pm: stats['pm']?.correct || 0,   skor_pm: stats['pm']?.score || 0
-};
+        // Ambil data dari hasil hitungan di atas (pakai ?. agar tidak error jika mapel tidak ada)
+        benar_pu: stats['pu']?.correct || 0,   skor_pu: stats['pu']?.score || 0,
+        benar_ppu: stats['ppu']?.correct || 0, skor_ppu: stats['ppu']?.score || 0,
+        benar_pbm: stats['pbm']?.correct || 0, skor_pbm: stats['pbm']?.score || 0,
+        benar_pk: stats['pk']?.correct || 0,   skor_pk: stats['pk']?.score || 0,
+        
+        // Perhatikan bagian ini: Mapping BI -> lit_indo, EN -> lit_ingg
+        benar_lit_indo: stats['bi']?.correct || 0, skor_lit_indo: stats['bi']?.score || 0,
+        benar_lit_ingg: stats['en']?.correct || 0, skor_lit_ingg: stats['en']?.score || 0,
+        
+        benar_pm: stats['pm']?.correct || 0,   skor_pm: stats['pm']?.score || 0
+    };
 
     // Kirim (Fire and Forget)
     fetch(SCRIPT_URL, {
@@ -1681,17 +1676,15 @@ const selectJurusan2 = document.getElementById('jurusan-2');
 ambilDataDariGS();
 
 function ambilDataDariGS() {
-    // PERBAIKAN: Beri pesan saat memuat & AMANKAN ELEMEN JIKA BELUM TERBACA
-    if (inputUniv1 && inputUniv2) {
-        inputUniv1.placeholder = "Sedang memuat daftar kampus...";
-        inputUniv2.placeholder = "Sedang memuat daftar kampus...";
-    }
+    // PERBAIKAN: Beri pesan saat memuat
+    inputUniv1.placeholder = "Sedang memuat daftar kampus...";
+    inputUniv2.placeholder = "Sedang memuat daftar kampus...";
     
     fetch(SCRIPT_URL_GET)
     .then(res => res.json())
     .then(data => {
         if (data.error) {
-            alert("ERROR GS: " + data.error);
+            alert("ERROR GS: " + data.error); // <-- INI PENTING! Kalau ada salah nama sheet, akan muncul pesan ini.
             return;
         }
 
@@ -1703,26 +1696,21 @@ function ambilDataDariGS() {
 
         // Masukkan ke kotak input
         daftarUniv.forEach(namaUniv => {
-            // PERBAIKAN: Cek dulu elemennya ada atau tidak agar tidak error
-            if (listUniv1) listUniv1.appendChild(new Option(namaUniv, namaUniv));
-            if (listUniv2) listUniv2.appendChild(new Option(namaUniv, namaUniv));
+            listUniv1.appendChild(new Option(namaUniv, namaUniv));
+            listUniv2.appendChild(new Option(namaUniv, namaUniv));
         });
     })
     .catch(err => {
-        if (inputUniv1 && inputUniv2) {
-            inputUniv1.placeholder = "Gagal memuat, coba muat ulang";
-            inputUniv2.placeholder = "Gagal memuat, coba muat ulang";
-        }
-        console.log("Error GS:", err);
-    });
+    inputUniv1.placeholder = "Gagal memuat, coba muat ulang";
+    inputUniv2.placeholder = "Gagal memuat, coba muat ulang";
+    // Hapus alert agar tidak mengganggu, cukup tulisan di kotak
+    console.log("Error GS:", err);
+});
 }
 
 // Filter Jurusan 1
 inputUniv1.addEventListener('input', function() {
     const cari = this.value.toUpperCase().trim();
-    // PERBAIKAN: Cek database sudah ada isinya belum
-    if (!databasePTN) return;
-    
     const hasil = databasePTN.filter(x => x.u === cari);
 
     selectJurusan1.innerHTML = '';
@@ -1741,9 +1729,6 @@ inputUniv1.addEventListener('input', function() {
 // Filter Jurusan 2
 inputUniv2.addEventListener('input', function() {
     const cari = this.value.toUpperCase().trim();
-    // PERBAIKAN: Cek database sudah ada isinya belum
-    if (!databasePTN) return;
-
     const hasil = databasePTN.filter(x => x.u === cari);
 
     selectJurusan2.innerHTML = '';
@@ -1759,18 +1744,13 @@ inputUniv2.addEventListener('input', function() {
     }
 });
 
-// FUNGSI KHUSUS TOMBOL PERBAIKI DATA - SUDAH DIPERBAIKI TOTAL
+        // FUNGSI KHUSUS TOMBOL PERBAIKI DATA - TAMBAHKAN INI SAJA
 function backToLogin() {
     // Sembunyikan halaman peraturan
-    const sop = document.getElementById('sopOverlay');
-    if (sop) sop.style.display = 'none';
-    
-    // Tampilkan kembali halaman login dengan animasi seperti aslimu
-    const loginCard = document.getElementById('loginCard');
-    if (loginCard) {
-        loginCard.style.display = 'flex';
-        loginCard.style.opacity = '1';
-    }
+    document.getElementById('sopOverlay').style.display = 'none';
+    // Tampilkan kembali halaman login
+    document.getElementById('loginCard').style.display = 'flex';
+    document.getElementById('loginCard').style.opacity = '1';
 }
     
     </script>
