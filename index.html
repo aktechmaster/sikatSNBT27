@@ -537,65 +537,70 @@
             </div>
         </div>
         <div class="form-side">
-            <div class="form-header">
-                <h2>Konfirmasi Data Peserta</h2>
-                <span>Silakan isi data diri Anda dengan benar.</span>
-            </div>
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Nama Lengkap</label>
-                    <input type="text" class="form-control" id="fullname" placeholder="CONTOH: BUDI SANTOSO" required oninput="this.value = this.value.toUpperCase()"
-        style="text-transform: uppercase">
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group"><label>Nomor Peserta</label><input type="number" inputmode="numeric" class="form-control" id="participantId" required></div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group"><label>NISN</label><input type="number" inputmode="numeric" class="form-control" id="nisn" required></div>
-                    </div>
-                </div>
-                <div class="form-group"><label>Asal Sekolah</label><input type="text" class="form-control" id="school" required oninput="this.value = this.value.toUpperCase()"
-        style="text-transform: uppercase"></div>
-                <div class="form-group"><label>Tanggal Lahir</label><input type="date" class="form-control" id="dob" required></div>
-
-
-            <div class="form-group" style="margin-top: 12px;">
-  <label><b>Pilihan Universitas 1</b></label>
-  <input list="list-univ-1" id="univ-1" class="form-control" placeholder="Ketik & pilih kampus 1...">
-  <datalist id="list-univ-1"></datalist>
-</div>
-
-<div class="form-group" style="margin-top: 8px;">
-  <label>Pilihan Jurusan 1</label>
-  <select id="jurusan-1" class="form-control" disabled>
-    <option value="">-- Pilih Universitas 1 Terlebih Dahulu --</option>
-  </select>
-</div>
-
-<hr style="border-top: 1px dashed #ccc; margin: 15px 0;">
-
-<div class="form-group">
-  <label><b>Pilihan Universitas 2</b></label>
-  <input list="list-univ-2" id="univ-2" class="form-control" placeholder="Ketik & pilih kampus 2...">
-  <datalist id="list-univ-2"></datalist>
-</div>
-
-<div class="form-group" style="margin-top: 8px;">
-  <label>Pilihan Jurusan 2</label>
-  <select id="jurusan-2" class="form-control" disabled>
-    <option value="">-- Pilih Universitas 2 Terlebih Dahulu --</option>
-  </select>
-</div>
-                
-                <div class="form-group" style="display:flex; gap:10px; margin-top:20px;">
-                    <input type="checkbox" id="consent" required style="margin-top:4px;">
-                    <label for="consent" style="font-weight:400; font-size:12px; color:#666; cursor:pointer;">Saya menyatakan bahwa data yang saya isikan adalah benar. Saya siap mengerjakan ujian dengan jujur dan menerima sanksi diskualifikasi (layar merah/blokir) jika terdeteksi melakukan kecurangan..</label>
-                </div>
-                <button type="submit" class="btn-submit">VERIFIKASI & MASUK RUANG UJIAN</button>
-            </form>
-        </div>
+    <div class="form-header">
+        <h2>Konfirmasi Data Peserta</h2>
+        <span>Silakan isi data diri Anda dengan benar.</span>
     </div>
+    <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+            <label>Nama Lengkap</label>
+            <input type="text" class="form-control" id="fullname" placeholder="CONTOH: BUDI SANTOSO" required oninput="this.value = this.value.toUpperCase()" style="text-transform: uppercase">
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group"><label>Nomor Peserta</label><input type="number" inputmode="numeric" class="form-control" id="participantId" required></div>
+            </div>
+            <div class="col">
+                <div class="form-group"><label>NISN</label><input type="number" inputmode="numeric" class="form-control" id="nisn" required></div>
+            </div>
+        </div>
+        <div class="form-group"><label>Asal Sekolah</label><input type="text" class="form-control" id="school" required oninput="this.value = this.value.toUpperCase()" style="text-transform: uppercase"></div>
+        <div class="form-group"><label>Tanggal Lahir</label><input type="date" class="form-control" id="dob" required></div>
+
+        <!-- ✅ BAGIAN BARU: KOLOM EMAIL PESERTA -->
+        <div class="form-group">
+            <label>Alamat Email <small style="color:#dc3545; font-weight:normal;">(Wajib diisi untuk menerima hasil ujian)</small></label>
+            <input type="email" class="form-control" id="userEmail" placeholder="contoh: nama@email.com" required>
+            <small style="color:#666; font-size:11px;">Pastikan email aktif dan benar, sertifikat & laporan evaluasi akan dikirim ke sini.</small>
+        </div>
+        <!-- ====================================== -->
+
+
+        <div class="form-group" style="margin-top: 12px;">
+            <label><b>Pilihan Universitas 1</b></label>
+            <input list="list-univ-1" id="univ-1" class="form-control" placeholder="Ketik & pilih kampus 1...">
+            <datalist id="list-univ-1"></datalist>
+        </div>
+
+        <div class="form-group" style="margin-top: 8px;">
+            <label>Pilihan Jurusan 1</label>
+            <select id="jurusan-1" class="form-control" disabled>
+                <option value="">-- Pilih Universitas 1 Terlebih Dahulu --</option>
+            </select>
+        </div>
+
+        <hr style="border-top: 1px dashed #ccc; margin: 15px 0;">
+
+        <div class="form-group">
+            <label><b>Pilihan Universitas 2</b></label>
+            <input list="list-univ-2" id="univ-2" class="form-control" placeholder="Ketik & pilih kampus 2...">
+            <datalist id="list-univ-2"></datalist>
+        </div>
+
+        <div class="form-group" style="margin-top: 8px;">
+            <label>Pilihan Jurusan 2</label>
+            <select id="jurusan-2" class="form-control" disabled>
+                <option value="">-- Pilih Universitas 2 Terlebih Dahulu --</option>
+            </select>
+        </div>
+
+        <div class="form-group" style="display:flex; gap:10px; margin-top:20px;">
+            <input type="checkbox" id="consent" required style="margin-top:4px;">
+            <label for="consent" style="font-weight:400; font-size:12px; color:#666; cursor:pointer;">Saya menyatakan bahwa data yang saya isikan adalah benar. Saya siap mengerjakan ujian dengan jujur dan menerima sanksi diskualifikasi (layar merah/blokir) jika terdeteksi melakukan kecurangan..</label>
+        </div>
+        <button type="submit" class="btn-submit">VERIFIKASI & MASUK RUANG UJIAN</button>
+    </form>
+</div>
 
     <div id="sopOverlay" class="sop-overlay">
         <div class="sop-card">
@@ -846,6 +851,7 @@
     const id = document.getElementById('participantId').value;
     const sch = document.getElementById('school').value.toUpperCase();
     const tgl = document.getElementById('dob').value; 
+    const email = document.getElementById('userEmail').value; // ✅ AMBIL NILAI EMAIL
 
     // --- AMBIL DATA KAMPUS PILIHAN ---
     const u1 = document.getElementById('univ-1').value.toUpperCase().trim();
@@ -903,11 +909,13 @@
     // ======================================================
 
     // Simpan ke variabel global 'userData'
+    // ✅ DITAMBAHKAN BAGIAN EMAIL DI SINI
     userData = { 
         name: n, 
         id: id, 
         school: sch, 
         birthDate: tgl,
+        email: email, // <-- DATA EMAIL DISIMPAN DI SINI
         univ1: u1,
         jurusan1: j1,
         univ2: u2,
@@ -1318,44 +1326,45 @@ for (let key in examData) {
     };
 }
     // ==========================================
-    // 2. KIRIM KE SPREADSHEET (LATAR BELAKANG)
-    // ==========================================
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxW2OF4yoLFo5gVYjdha39mk3MIsUFwC6dAtfq1Bp_pdzeC9DNqyeS8rAnoePPnJrk8/exec";
-    
-    // Mapping Data: Menyesuaikan "bi/en" (HTML) ke "lit_indo/lit_ingg" (Apps Script)
-    let dataKirim = {
-        nama: userData.name || "-",
-        nomor: userData.id || "-",
-        sekolah: userData.school || "-",
-        tgl_lahir: userData.birthDate || "-",
-        // --- DATA KAMPUS BARU YANG AKAN MASUK KE GS ---
+// 2. KIRIM KE SPREADSHEET (LATAR BELAKANG)
+// ==========================================
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxW2OF4yoLFo5gVYjdha39mk3MIsUFwC6dAtfq1Bp_pdzeC9DNqyeS8rAnoePPnJrk8/exec";
+
+// Mapping Data: Menyesuaikan "bi/en" (HTML) ke "lit_indo/lit_ingg" (Apps Script)
+let dataKirim = {
+    nama: userData.name || "-",
+    nomor: userData.id || "-",
+    sekolah: userData.school || "-",
+    tgl_lahir: userData.birthDate || "-",
+    email: userData.email || "-", // ✅ DATA EMAIL DITAMBAHKAN DI SINI
+    // --- DATA KAMPUS BARU YANG AKAN MASUK KE GS ---
     pilihan_univ_1: userData.univ1 || "-",
     pilihan_jurusan_1: userData.jurusan1 || "-",
     pilihan_univ_2: userData.univ2 || "-",
     pilihan_jurusan_2: userData.jurusan2 || "-",
     // ----------------------------------------------
-        pelanggaran: violationCount || 0,
+    pelanggaran: violationCount || 0,
 
-        // Ambil data dari hasil hitungan di atas (pakai ?. agar tidak error jika mapel tidak ada)
-        benar_pu: stats['pu']?.correct || 0,   skor_pu: stats['pu']?.score || 0,
-        benar_ppu: stats['ppu']?.correct || 0, skor_ppu: stats['ppu']?.score || 0,
-        benar_pbm: stats['pbm']?.correct || 0, skor_pbm: stats['pbm']?.score || 0,
-        benar_pk: stats['pk']?.correct || 0,   skor_pk: stats['pk']?.score || 0,
-        
-        // Perhatikan bagian ini: Mapping BI -> lit_indo, EN -> lit_ingg
-        benar_lit_indo: stats['bi']?.correct || 0, skor_lit_indo: stats['bi']?.score || 0,
-        benar_lit_ingg: stats['en']?.correct || 0, skor_lit_ingg: stats['en']?.score || 0,
-        
-        benar_pm: stats['pm']?.correct || 0,   skor_pm: stats['pm']?.score || 0
-    };
+    // Ambil data dari hasil hitungan di atas (pakai ?. agar tidak error jika mapel tidak ada)
+    benar_pu: stats['pu']?.correct || 0,   skor_pu: stats['pu']?.score || 0,
+    benar_ppu: stats['ppu']?.correct || 0, skor_ppu: stats['ppu']?.score || 0,
+    benar_pbm: stats['pbm']?.correct || 0, skor_pbm: stats['pbm']?.score || 0,
+    benar_pk: stats['pk']?.correct || 0,   skor_pk: stats['pk']?.score || 0,
+    
+    // Perhatikan bagian ini: Mapping BI -> lit_indo, EN -> lit_ingg
+    benar_lit_indo: stats['bi']?.correct || 0, skor_lit_indo: stats['bi']?.score || 0,
+    benar_lit_ingg: stats['en']?.correct || 0, skor_lit_ingg: stats['en']?.score || 0,
+    
+    benar_pm: stats['pm']?.correct || 0,   skor_pm: stats['pm']?.score || 0
+};
 
-    // Kirim (Fire and Forget)
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dataKirim)
-    }).catch(e => console.log("Gagal lapor spreadsheet:", e));
+// Kirim (Fire and Forget)
+fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dataKirim)
+}).catch(e => console.log("Gagal lapor spreadsheet:", e));
 
     // ==========================================
     // 3. TAMPILKAN SERTIFIKAT (FORMAT LAMA ANDA)
