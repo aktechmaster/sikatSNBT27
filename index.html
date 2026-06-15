@@ -851,7 +851,7 @@
     const id = document.getElementById('participantId').value;
     const sch = document.getElementById('school').value.toUpperCase();
     const tgl = document.getElementById('dob').value; 
-    const email = document.getElementById('userEmail').value; // ✅ AMBIL NILAI EMAIL
+    const email = document.getElementById('userEmail').value; // ✅ Ambil Email
 
     // --- AMBIL DATA KAMPUS PILIHAN ---
     const u1 = document.getElementById('univ-1').value.toUpperCase().trim();
@@ -862,14 +862,11 @@
     // ======================================================
     // ✅ BAGIAN PENGECEKAN & PESAN ERROR TANPA ALERT
     // ======================================================
-    
-    // Cari elemen pesan error (kita buat dinamis)
     let errorBox = document.getElementById('errorNotification');
-    // Jika belum ada, buat kotak pesannya di bawah tombol
     if (!errorBox) {
         errorBox = document.createElement('div');
         errorBox.id = 'errorNotification';
-        errorBox.style.color = '#dc3545'; // Warna Merah
+        errorBox.style.color = '#dc3545';
         errorBox.style.fontWeight = 'bold';
         errorBox.style.textAlign = 'center';
         errorBox.style.padding = '10px';
@@ -877,52 +874,36 @@
         errorBox.style.border = '1px solid #dc3545';
         errorBox.style.borderRadius = '5px';
         errorBox.style.backgroundColor = '#f8d7da';
-        // Tempelkan di paling bawah form
         document.querySelector('.form-group:last-child').after(errorBox);
     }
 
     let pesanKesalahan = "";
+    if (u1 === "" || j1 === "") pesanKesalahan += "❌ Pilihan Universitas & Jurusan 1 WAJIB diisi lengkap!<br>";
+    if (u2 === "" || j2 === "") pesanKesalahan += "❌ Pilihan Universitas & Jurusan 2 WAJIB diisi lengkap!<br>";
 
-    // Cek Pilihan 1
-    if (u1 === "" || j1 === "") {
-        pesanKesalahan += "❌ Pilihan Universitas & Jurusan 1 WAJIB diisi lengkap!<br>";
-    }
-
-    // Cek Pilihan 2
-    if (u2 === "" || j2 === "") {
-        pesanKesalahan += "❌ Pilihan Universitas & Jurusan 2 WAJIB diisi lengkap!<br>";
-    }
-
-    // Jika ada yang kosong
     if (pesanKesalahan !== "") {
-        // Tampilkan pesan di halaman, TIDAK PAKAI ALERT
         errorBox.innerHTML = pesanKesalahan + "<small style='color:#990000;'>Lengkapi data sebelum lanjut.</small>";
-        // Gulirkan layar ke atas agar terlihat pesannya
         window.scrollTo({top: 0, behavior: 'smooth'});
-        return; // STOP, tidak lanjut
+        return;
     } else {
-        // Jika benar semua, hilangkan pesan error
         errorBox.remove();
     }
     // ======================================================
-    // ✅ SELESAI: TIDAK ADA POPUP, AMAN DARI PELANGGARAN
-    // ======================================================
 
-    // Simpan ke variabel global 'userData'
-    // ✅ DITAMBAHKAN BAGIAN EMAIL DI SINI
+    // ✅ SIMPAN DATA KE USERDATA (STRUKTUR LENGKAP & BENAR)
     userData = { 
         name: n, 
         id: id, 
         school: sch, 
         birthDate: tgl,
-        email: email, // <-- DATA EMAIL DISIMPAN DI SINI
+        email: email,       // Data Email tersimpan aman
         univ1: u1,
         jurusan1: j1,
         univ2: u2,
         jurusan2: j2
     };
 
-    // Transisi ke Lobby (Hanya jalan jika semua data lengkap)
+    // ✅ TRANSISI KE LOBBY (KODE ASLI DIPULIHKAN, TIDAK DIUBAH)
     document.getElementById('loginCard').style.opacity = '0';
     setTimeout(() => {
         document.getElementById('loginCard').style.display = 'none';
@@ -1330,37 +1311,38 @@ for (let key in examData) {
 // ==========================================
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxW2OF4yoLFo5gVYjdha39mk3MIsUFwC6dAtfq1Bp_pdzeC9DNqyeS8rAnoePPnJrk8/exec";
 
-// Mapping Data: URUTANNYA HARUS SAMA PERSIS DENGAN GS KAMU
+// ✅ URUTAN SUDAH 100% SAMA DENGAN GOOGLE SCRIPT KAMU
 let dataKirim = {
-    nama: userData.name || "-",             // B
-    nomor: userData.id || "-",              // C
-    sekolah: userData.school || "-",        // D
-    tgl_lahir: userData.birthDate || "-",   // E
-    pilihan_univ_1: userData.univ1 || "-",  // F
-    pilihan_jurusan_1: userData.jurusan1 || "-", // G
-    pilihan_univ_2: userData.univ2 || "-",  // H
-    pilihan_jurusan_2: userData.jurusan2 || "-", // I
+    nama: userData.name || "-",
+    nomor: userData.id || "-",
+    sekolah: userData.school || "-",
+    tgl_lahir: userData.birthDate || "-",
+    pilihan_univ_1: userData.univ1 || "-",
+    pilihan_jurusan_1: userData.jurusan1 || "-",
+    pilihan_univ_2: userData.univ2 || "-",
+    pilihan_jurusan_2: userData.jurusan2 || "-",
+
+    benar_pu: stats['pu']?.correct || 0,
+    skor_pu: stats['pu']?.score || 0,
+    benar_ppu: stats['ppu']?.correct || 0,
+    skor_ppu: stats['ppu']?.score || 0,
+    benar_pbm: stats['pbm']?.correct || 0,
+    skor_pbm: stats['pbm']?.score || 0,
+    benar_pk: stats['pk']?.correct || 0,
+    skor_pk: stats['pk']?.score || 0,
     
-    benar_pu: stats['pu']?.correct || 0,    // J
-    skor_pu: stats['pu']?.score || 0,       // K
-    benar_ppu: stats['ppu']?.correct || 0, // L
-    skor_ppu: stats['ppu']?.score || 0,     // M
-    benar_pbm: stats['pbm']?.correct || 0,  // N
-    skor_pbm: stats['pbm']?.score || 0,     // O
-    benar_pk: stats['pk']?.correct || 0,    // P
-    skor_pk: stats['pk']?.score || 0,       // Q
-    benar_lit_indo: stats['bi']?.correct || 0, // R
-    skor_lit_indo: stats['bi']?.score || 0,    // S
-    benar_lit_ingg: stats['en']?.correct || 0, // T
-    skor_lit_ingg: stats['en']?.score || 0,    // U
-    benar_pm: stats['pm']?.correct || 0,   // V
-    skor_pm: stats['pm']?.score || 0,       // W
+    benar_lit_indo: stats['bi']?.correct || 0,
+    skor_lit_indo: stats['bi']?.score || 0,
+    benar_lit_ingg: stats['en']?.correct || 0,
+    skor_lit_ingg: stats['en']?.score || 0,
     
-    pelanggaran: violationCount || 0,       // X
-    email: userData.email || "-"            // ✅ KOLOM Y: DITAMBAHKAN DI SINI (URUTAN TERAKHIR)
+    benar_pm: stats['pm']?.correct || 0,
+    skor_pm: stats['pm']?.score || 0,
+
+    pelanggaran: violationCount || 0,
+    email: userData.email || "-" // ✅ EMAIL DI URUTAN TERAKHIR (KOLOM Y)
 };
 
-// Kirim (Fire and Forget)
 fetch(SCRIPT_URL, {
     method: 'POST',
     mode: 'no-cors',
