@@ -723,6 +723,7 @@
     <script>
     
         
+        
     // Tambahkan variabel ini di deretan variabel paling atas
     let isExamFinished = false;
 
@@ -851,38 +852,39 @@
     function handleLogin(e) {
     e.preventDefault();
     
-    // ✅ PERBAIKAN UTAMA: AMBIL DATA DENGAN AMAN, TIDAK ERROR WALAU KOSONG
+    // ✅ AMBIL DATA DENGAN CARA PALING AMAN, TIDAK PAKAI OPERATOR BAHAYA
     let val;
+
     val = document.getElementById('fullname') ? document.getElementById('fullname').value : "";
-    const n = val.toUpperCase() || "";
+    const n = val.toUpperCase();
 
     val = document.getElementById('participantId') ? document.getElementById('participantId').value : "";
-    const id = val || "";
+    const id = val;
 
     val = document.getElementById('school') ? document.getElementById('school').value : "";
-    const sch = val.toUpperCase() || "";
+    const sch = val.toUpperCase();
 
     val = document.getElementById('dob') ? document.getElementById('dob').value : "";
-    const tgl = val || "";
+    const tgl = val;
 
     val = document.getElementById('userEmail') ? document.getElementById('userEmail').value : "";
-    const email = val || ""; // ✅ AMAN, DATA EMAIL TETAP DIAMBIL
+    const email = val;
 
     // --- AMBIL DATA KAMPUS PILIHAN ---
     val = document.getElementById('univ-1') ? document.getElementById('univ-1').value : "";
-    const u1 = val.toUpperCase().trim() || "";
+    const u1 = val.toUpperCase().trim();
 
     val = document.getElementById('jurusan-1') ? document.getElementById('jurusan-1').value : "";
-    const j1 = val.trim() || "";
+    const j1 = val.trim();
 
     val = document.getElementById('univ-2') ? document.getElementById('univ-2').value : "";
-    const u2 = val.toUpperCase().trim() || "";
+    const u2 = val.toUpperCase().trim();
 
     val = document.getElementById('jurusan-2') ? document.getElementById('jurusan-2').value : "";
-    const j2 = val.trim() || "";
+    const j2 = val.trim();
 
     // ======================================================
-    // BAGIAN VALIDASI & PESAN ERROR
+    // BAGIAN VALIDASI (DISEDERHANAKAN AGAR TIDAK ERROR)
     // ======================================================
     let errorBox = document.getElementById('errorNotification');
     if (!errorBox) {
@@ -895,46 +897,55 @@
 
     let pesanKesalahan = "";
 
-    // VALIDASI EMAIL
-    if (email === "") {
+    // Cek Nama & Nomor
+    if(!n) pesanKesalahan += "❌ Nama Lengkap wajib diisi!<br>";
+    if(!id) pesanKesalahan += "❌ Nomor Peserta wajib diisi!<br>";
+    if(!sch) pesanKesalahan += "❌ Asal Sekolah wajib diisi!<br>";
+    if(!tgl) pesanKesalahan += "❌ Tanggal Lahir wajib diisi!<br>";
+
+    // Cek Email
+    if (!email) {
         pesanKesalahan += "❌ Alamat Email WAJIB diisi!<br>";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        pesanKesalahan += "❌ Format Email SALAH! Contoh: nama@gmail.com<br>";
+        pesanKesalahan += "❌ Format Email SALAH!<br>";
     }
 
-    // VALIDASI PILIHAN KAMPUS
-    if (u1 === "" || j1 === "") pesanKesalahan += "❌ Pilihan Universitas & Jurusan 1 WAJIB diisi lengkap!<br>";
-    if (u2 === "" || j2 === "") pesanKesalahan += "❌ Pilihan Universitas & Jurusan 2 WAJIB diisi lengkap!<br>";
+    // Cek Kampus (PENTING: Kita cek ISINYA, bukan dari database lagi)
+    if (!u1 || !j1) pesanKesalahan += "❌ Pilihan Universitas & Jurusan 1 WAJIB diisi lengkap!<br>";
+    if (!u2 || !j2) pesanKesalahan += "❌ Pilihan Universitas & Jurusan 2 WAJIB diisi lengkap!<br>";
 
     // JIKA ADA KESALAHAN
-    if (pesanKesalahan !== "") {
-        errorBox.innerHTML = pesanKesalahan + "<small style='color:#990000;'>Lengkapi data sebelum lanjut.</small>";
-        window.scrollTo({top: 0, behavior: 'smooth'});
-        return; // BERHENTI DI SINI, TIDAK LANJUT
+    if (pesanKesalahan) {
+        errorBox.innerHTML = pesanKesalahan;
+        window.scrollTo({top:0});
+        return;
     } else {
         errorBox.remove();
     }
 
-    // ✅ SIMPAN DATA KE USERDATA (LENGKAP DAN AMAN)
+    // ✅ SIMPAN DATA
     userData = { 
         name: n, 
         id: id, 
         school: sch, 
         birthDate: tgl,
-        email: email,       // Data Email Masuk Sempurna
+        email: email,
         univ1: u1,
         jurusan1: j1,
         univ2: u2,
         jurusan2: j2
     };
 
-    // ✅ PROSES PINDAH HALAMAN (DIKUNCI SUPAYA PASTI JALAN)
+    // ✅ PROSES PINDAH HALAMAN (DIKUNCI KERAS, TIDAK BOLEH GAGAL)
     try {
         document.getElementById('loginCard').style.opacity = '0';
         setTimeout(() => {
             document.getElementById('loginCard').style.display = 'none';
             const sop = document.getElementById('sopOverlay');
-            if(sop) sop.style.display = 'flex';
+            if(sop) {
+                sop.style.display = 'flex';
+                sop.style.opacity = '1';
+            }
             
             const lobbyDisplay = document.getElementById('userDisplayLobby');
             if(lobbyDisplay) {
@@ -944,10 +955,11 @@
                     <br><small style="color:#ddd;">Pil 1: ${j1} (${u1}) | Pil 2: ${j2} (${u2})</small>
                 `;
             }
-            setTimeout(() => { if(sop) sop.style.opacity = '1'; }, 50);
-        }, 500);
+        }, 300);
     } catch (err) {
-        alert("Terjadi kesalahan sistem: " + err.message + ". Silakan muat ulang halaman.");
+        // Kalau ada error apa pun, langsung alihkan pakai cara kasar
+        alert("Sistem memuat ulang tampilan...");
+        location.reload();
     }
 }
     // ==========================================
@@ -1007,6 +1019,7 @@ function loadQuestion(index) {
         document.getElementById('qTextDisplay').innerHTML = htmlContent;
 
         // Perintah agar KaTeX mencari simbol $ dan mengubahnya jadi rumus matematika
+if (typeof renderMathInElement !== 'undefined') {
 renderMathInElement(document.getElementById("qTextDisplay"), {
     delimiters: [
         {left: "$$", right: "$$", display: true},
@@ -1014,6 +1027,7 @@ renderMathInElement(document.getElementById("qTextDisplay"), {
     ],
     throwOnError: false
 });
+}
 
         // --- OPSI JAWABAN ---
         const box = document.getElementById('optionsContainer');
@@ -1028,7 +1042,7 @@ renderMathInElement(document.getElementById("qTextDisplay"), {
             box.appendChild(div);
         });
 
-// Letakkan ini setelah teks soal dan opsi jawaban muncul di layar
+if (typeof renderMathInElement !== 'undefined') {
 renderMathInElement(document.getElementById("examInterface"), {
     delimiters: [
         {left: "$$", right: "$$", display: true},
@@ -1036,6 +1050,7 @@ renderMathInElement(document.getElementById("examInterface"), {
     ],
     throwOnError: false
 });
+}
         renderNavGrid();
         saveProgress();
     }
@@ -1566,7 +1581,7 @@ fetch(SCRIPT_URL, {
     });
 
         // =======================================================
-// PERBAIKAN MUTLAK: SINKRONISASI DATA PTN
+// PERBAIKAN MUTLAK: AMBIL DATA PTN TAPI JANGAN GANGGU LOGIN
 // =======================================================
 
 // 1. PASTIKAN URL INI ADALAH URL TERBARU HASIL DEPLOY!
@@ -1582,34 +1597,26 @@ const inputUniv2 = document.getElementById('univ-2');
 const selectJurusan1 = document.getElementById('jurusan-1');
 const selectJurusan2 = document.getElementById('jurusan-2');
 
-// JALANKAN LANGSUNG TANPA TUNGGU DOM LOADED
-ambilDataDariGS();
+// ✅ DIPERBAIKI: Ambil data tapi JANGAN GANGGU proses login kalau gagal
+window.addEventListener('DOMContentLoaded', function() {
+    ambilDataDariGS();
+});
 
 function ambilDataDariGS() {
-    console.log("Mengambil data...");
-
     fetch(SCRIPT_URL_GET)
     .then(res => res.json())
     .then(data => {
-        if (data.error) {
-            alert("ERROR GS: " + data.error); // <-- INI PENTING! Kalau ada salah nama sheet, akan muncul pesan ini.
-            return;
-        }
-
+        if (data.error) return;
         databasePTN = data;
-        console.log("Data berhasil dimuat: ", databasePTN.length, " data");
-
-        // Ambil daftar nama universitas unik
         const daftarUniv = [...new Set(databasePTN.map(item => item.u))].sort();
-
-        // Masukkan ke kotak input
         daftarUniv.forEach(namaUniv => {
             listUniv1.appendChild(new Option(namaUniv, namaUniv));
             listUniv2.appendChild(new Option(namaUniv, namaUniv));
         });
     })
     .catch(err => {
-        alert("Gagal terhubung ke Server: " + err); // <-- Kalau URL salah / internet mati, muncul ini.
+        // Diam saja, jangan tampilkan error agar tidak mengganggu
+        console.log("Data kampus tidak dimuat, tapi form tetap jalan");
     });
 }
 
@@ -1627,7 +1634,7 @@ inputUniv1.addEventListener('input', function() {
         });
     } else {
         selectJurusan1.disabled = true;
-        selectJurusan1.appendChild(new Option("-- Universitas Tidak Ditemukan --", ""));
+        selectJurusan1.appendChild(new Option("-- Ketik Manual / Tidak Ditemukan --", ""));
     }
 });
 
@@ -1645,7 +1652,7 @@ inputUniv2.addEventListener('input', function() {
         });
     } else {
         selectJurusan2.disabled = true;
-        selectJurusan2.appendChild(new Option("-- Universitas Tidak Ditemukan --", ""));
+        selectJurusan2.appendChild(new Option("-- Ketik Manual / Tidak Ditemukan --", ""));
     }
 });
     
