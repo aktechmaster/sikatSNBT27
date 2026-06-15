@@ -846,77 +846,88 @@
     function handleLogin(e) {
     e.preventDefault();
     
-    // Ambil semua nilai dari formulir
-    const n = document.getElementById('fullname').value.toUpperCase();
-    const id = document.getElementById('participantId').value;
-    const sch = document.getElementById('school').value.toUpperCase();
-    const tgl = document.getElementById('dob').value; 
-    const email = document.getElementById('userEmail').value; // ✅ Ambil Email
+    // AMBIL DATA DENGAN PENGAMAN (JANGAN SAMPAI ERROR ELEMEN TIDAK KETEMU)
+    const n = document.getElementById('fullname')?.value.toUpperCase() || "";
+    const id = document.getElementById('participantId')?.value || "";
+    const sch = document.getElementById('school')?.value.toUpperCase() || "";
+    const tgl = document.getElementById('dob')?.value || ""; 
+    const email = document.getElementById('userEmail')?.value || ""; // ✅ AMAN, TIDAK ERROR KALAU KOSONG
 
     // --- AMBIL DATA KAMPUS PILIHAN ---
-    const u1 = document.getElementById('univ-1').value.toUpperCase().trim();
-    const j1 = document.getElementById('jurusan-1').value.trim();
-    const u2 = document.getElementById('univ-2').value.toUpperCase().trim();
-    const j2 = document.getElementById('jurusan-2').value.trim();
+    const u1 = document.getElementById('univ-1')?.value.toUpperCase().trim() || "";
+    const j1 = document.getElementById('jurusan-1')?.value.trim() || "";
+    const u2 = document.getElementById('univ-2')?.value.toUpperCase().trim() || "";
+    const j2 = document.getElementById('jurusan-2')?.value.trim() || "";
 
     // ======================================================
-    // ✅ BAGIAN PENGECEKAN & PESAN ERROR TANPA ALERT
+    // BAGIAN VALIDASI & PESAN ERROR
     // ======================================================
     let errorBox = document.getElementById('errorNotification');
     if (!errorBox) {
         errorBox = document.createElement('div');
         errorBox.id = 'errorNotification';
-        errorBox.style.color = '#dc3545';
-        errorBox.style.fontWeight = 'bold';
-        errorBox.style.textAlign = 'center';
-        errorBox.style.padding = '10px';
-        errorBox.style.marginTop = '15px';
-        errorBox.style.border = '1px solid #dc3545';
-        errorBox.style.borderRadius = '5px';
-        errorBox.style.backgroundColor = '#f8d7da';
-        document.querySelector('.form-group:last-child').after(errorBox);
+        errorBox.style.cssText = "color:#dc3545; font-weight:bold; text-align:center; padding:10px; margin-top:15px; border:1px solid #dc3545; border-radius:5px; background:#f8d7da;";
+        const lastGroup = document.querySelector('.form-group:last-child');
+        if(lastGroup) lastGroup.after(errorBox);
     }
 
     let pesanKesalahan = "";
+
+    // VALIDASI EMAIL
+    if (email === "") {
+        pesanKesalahan += "❌ Alamat Email WAJIB diisi!<br>";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        pesanKesalahan += "❌ Format Email SALAH! Contoh: nama@gmail.com<br>";
+    }
+
+    // VALIDASI PILIHAN KAMPUS
     if (u1 === "" || j1 === "") pesanKesalahan += "❌ Pilihan Universitas & Jurusan 1 WAJIB diisi lengkap!<br>";
     if (u2 === "" || j2 === "") pesanKesalahan += "❌ Pilihan Universitas & Jurusan 2 WAJIB diisi lengkap!<br>";
 
+    // JIKA ADA KESALAHAN
     if (pesanKesalahan !== "") {
         errorBox.innerHTML = pesanKesalahan + "<small style='color:#990000;'>Lengkapi data sebelum lanjut.</small>";
         window.scrollTo({top: 0, behavior: 'smooth'});
-        return;
+        return; // BERHENTI DI SINI, TIDAK LANJUT
     } else {
         errorBox.remove();
     }
-    // ======================================================
 
-    // ✅ SIMPAN DATA KE USERDATA (STRUKTUR LENGKAP & BENAR)
+    // ✅ SIMPAN DATA KE USERDATA (LENGKAP DAN AMAN)
     userData = { 
         name: n, 
         id: id, 
         school: sch, 
         birthDate: tgl,
-        email: email,       // Data Email tersimpan aman
+        email: email,       // Data Email Masuk Sempurna
         univ1: u1,
         jurusan1: j1,
         univ2: u2,
         jurusan2: j2
     };
 
-    // ✅ TRANSISI KE LOBBY (KODE ASLI DIPULIHKAN, TIDAK DIUBAH)
-    document.getElementById('loginCard').style.opacity = '0';
-    setTimeout(() => {
-        document.getElementById('loginCard').style.display = 'none';
-        const sop = document.getElementById('sopOverlay');
-        sop.style.display = 'flex';
-        
-        document.getElementById('userDisplayLobby').innerHTML = `
-            <span class="user-name-big">${n}</span>
-            <span class="user-meta">NO: ${id} | ${sch}</span>
-            <br><small style="color:#ddd;">Pil 1: ${j1} (${u1}) | Pil 2: ${j2} (${u2})</small>
-        `;
-        setTimeout(() => sop.style.opacity = '1', 50);
-    }, 500);
+    // ✅ PROSES PINDAH HALAMAN (DIKUNCI SUPAYA PASTI JALAN)
+    try {
+        document.getElementById('loginCard').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('loginCard').style.display = 'none';
+            const sop = document.getElementById('sopOverlay');
+            if(sop) sop.style.display = 'flex';
+            
+            const lobbyDisplay = document.getElementById('userDisplayLobby');
+            if(lobbyDisplay) {
+                lobbyDisplay.innerHTML = `
+                    <span class="user-name-big">${n}</span>
+                    <span class="user-meta">NO: ${id} | ${sch}</span>
+                    <br><small style="color:#ddd;">Pil 1: ${j1} (${u1}) | Pil 2: ${j2} (${u2})</small>
+                `;
+            }
+            setTimeout(() => { if(sop) sop.style.opacity = '1'; }, 50);
+        }, 500);
+    } catch (err) {
+        // JIKA TERJADI ERROR APA PUN, TAMPILKAN DI SINI BIAR TIDAK PUTIH
+        alert("Terjadi kesalahan sistem: " + err.message + ". Silakan muat ulang halaman.");
+    }
 }
     // ==========================================
     // 2. MULAI UJIAN (START)
