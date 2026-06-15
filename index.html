@@ -1330,32 +1330,34 @@ for (let key in examData) {
 // ==========================================
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxW2OF4yoLFo5gVYjdha39mk3MIsUFwC6dAtfq1Bp_pdzeC9DNqyeS8rAnoePPnJrk8/exec";
 
-// Mapping Data: Menyesuaikan "bi/en" (HTML) ke "lit_indo/lit_ingg" (Apps Script)
+// Mapping Data: URUTANNYA HARUS SAMA PERSIS DENGAN GS KAMU
 let dataKirim = {
-    nama: userData.name || "-",
-    nomor: userData.id || "-",
-    sekolah: userData.school || "-",
-    tgl_lahir: userData.birthDate || "-",
-    email: userData.email || "-", // ✅ DATA EMAIL DITAMBAHKAN DI SINI
-    // --- DATA KAMPUS BARU YANG AKAN MASUK KE GS ---
-    pilihan_univ_1: userData.univ1 || "-",
-    pilihan_jurusan_1: userData.jurusan1 || "-",
-    pilihan_univ_2: userData.univ2 || "-",
-    pilihan_jurusan_2: userData.jurusan2 || "-",
-    // ----------------------------------------------
-    pelanggaran: violationCount || 0,
-
-    // Ambil data dari hasil hitungan di atas (pakai ?. agar tidak error jika mapel tidak ada)
-    benar_pu: stats['pu']?.correct || 0,   skor_pu: stats['pu']?.score || 0,
-    benar_ppu: stats['ppu']?.correct || 0, skor_ppu: stats['ppu']?.score || 0,
-    benar_pbm: stats['pbm']?.correct || 0, skor_pbm: stats['pbm']?.score || 0,
-    benar_pk: stats['pk']?.correct || 0,   skor_pk: stats['pk']?.score || 0,
+    nama: userData.name || "-",             // B
+    nomor: userData.id || "-",              // C
+    sekolah: userData.school || "-",        // D
+    tgl_lahir: userData.birthDate || "-",   // E
+    pilihan_univ_1: userData.univ1 || "-",  // F
+    pilihan_jurusan_1: userData.jurusan1 || "-", // G
+    pilihan_univ_2: userData.univ2 || "-",  // H
+    pilihan_jurusan_2: userData.jurusan2 || "-", // I
     
-    // Perhatikan bagian ini: Mapping BI -> lit_indo, EN -> lit_ingg
-    benar_lit_indo: stats['bi']?.correct || 0, skor_lit_indo: stats['bi']?.score || 0,
-    benar_lit_ingg: stats['en']?.correct || 0, skor_lit_ingg: stats['en']?.score || 0,
+    benar_pu: stats['pu']?.correct || 0,    // J
+    skor_pu: stats['pu']?.score || 0,       // K
+    benar_ppu: stats['ppu']?.correct || 0, // L
+    skor_ppu: stats['ppu']?.score || 0,     // M
+    benar_pbm: stats['pbm']?.correct || 0,  // N
+    skor_pbm: stats['pbm']?.score || 0,     // O
+    benar_pk: stats['pk']?.correct || 0,    // P
+    skor_pk: stats['pk']?.score || 0,       // Q
+    benar_lit_indo: stats['bi']?.correct || 0, // R
+    skor_lit_indo: stats['bi']?.score || 0,    // S
+    benar_lit_ingg: stats['en']?.correct || 0, // T
+    skor_lit_ingg: stats['en']?.score || 0,    // U
+    benar_pm: stats['pm']?.correct || 0,   // V
+    skor_pm: stats['pm']?.score || 0,       // W
     
-    benar_pm: stats['pm']?.correct || 0,   skor_pm: stats['pm']?.score || 0
+    pelanggaran: violationCount || 0,       // X
+    email: userData.email || "-"            // ✅ KOLOM Y: DITAMBAHKAN DI SINI (URUTAN TERAKHIR)
 };
 
 // Kirim (Fire and Forget)
