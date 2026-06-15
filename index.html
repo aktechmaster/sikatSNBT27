@@ -1743,6 +1743,15 @@ inputUniv2.addEventListener('input', function() {
         selectJurusan2.appendChild(new Option("-- Universitas Tidak Ditemukan --", ""));
     }
 });
+
+        // FUNGSI KHUSUS TOMBOL PERBAIKI DATA - TAMBAHKAN INI SAJA
+function backToLogin() {
+    // Sembunyikan halaman peraturan
+    document.getElementById('sopOverlay').style.display = 'none';
+    // Tampilkan kembali halaman login
+    document.getElementById('loginCard').style.display = 'flex';
+    document.getElementById('loginCard').style.opacity = '1';
+}
     
     </script>
 
