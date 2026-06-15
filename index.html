@@ -581,6 +581,12 @@ window.addEventListener('load', function() {
         style="text-transform: uppercase"></div>
                 <div class="form-group"><label>Tanggal Lahir</label><input type="date" class="form-control" id="dob" required></div>
 
+                <div class="form-group">
+    <label>Alamat Email</label>
+    <input type="email" class="form-control" id="email" placeholder="contoh: nama@email.com" required>
+    <small style="color:#888; font-size:11px;">*Pastikan email aktif dan benar</small>
+</div>
+
 
             <div class="form-group" style="margin-top: 12px;">
   <label><b>Pilihan Universitas 1</b></label>
@@ -868,6 +874,7 @@ window.addEventListener('load', function() {
     const id = document.getElementById('participantId').value;
     const sch = document.getElementById('school').value.toUpperCase();
     const tgl = document.getElementById('dob').value; 
+    const email = document.getElementById('email').value.trim(); // Ambil data Email
 
     // --- AMBIL DATA KAMPUS PILIHAN ---
     const u1 = document.getElementById('univ-1').value.toUpperCase().trim();
@@ -934,6 +941,7 @@ window.addEventListener('load', function() {
         jurusan1: j1,
         univ2: u2,
         jurusan2: j2
+        email: email
     };
 
     // Transisi ke Lobby (Hanya jalan jika semua data lengkap)
@@ -946,6 +954,7 @@ window.addEventListener('load', function() {
         document.getElementById('userDisplayLobby').innerHTML = `
             <span class="user-name-big">${n}</span>
             <span class="user-meta">NO: ${id} | ${sch}</span>
+            <span class="user-meta">📧 ${email}</span>
             <br><small style="color:#ddd;">Pil 1: ${j1} (${u1}) | Pil 2: ${j2} (${u2})</small>
         `;
         setTimeout(() => sop.style.opacity = '1', 50);
@@ -1357,6 +1366,7 @@ for (let key in examData) {
     pilihan_jurusan_2: userData.jurusan2 || "-",
     // ----------------------------------------------
         pelanggaran: violationCount || 0,
+        email: userData.email || "-",
 
         // Ambil data dari hasil hitungan di atas (pakai ?. agar tidak error jika mapel tidak ada)
         benar_pu: stats['pu']?.correct || 0,   skor_pu: stats['pu']?.score || 0,
